@@ -62,8 +62,13 @@ export async function initializeDatabase(): Promise<void> {
     await pool.query(sql);
     console.log('✓ Database schema verified');
   } catch (err) {
-    console.error('Database initialization error:', err);
-    throw err;
+    // In development, database might not be available yet
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Database initialization error:', err);
+      throw err;
+    } else {
+      console.warn('⚠ Database not available in development (will work on Render)');
+    }
   }
 }
 

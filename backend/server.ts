@@ -3,10 +3,15 @@ import cors from 'cors';
 import path from 'path';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import { initializeDatabase } from './db';
 import preregistrationRoutes from './routes/preregistrations';
 
 dotenv.config();
+
+// ── Define __dirname for ES modules ──
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
@@ -31,7 +36,10 @@ initializeDatabase()
   })
   .catch((err) => {
     console.error('✗ Database initialization failed:', err);
-    process.exit(1);
+    // Don't exit in development, just warn
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   });
 
 // ── API Routes ──
