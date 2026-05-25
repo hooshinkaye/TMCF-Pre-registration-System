@@ -23,7 +23,7 @@ export function AdminDashboard() {
   const fetchRegistrations = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/get-preregistrations.php?limit=1000`);
+      const response = await fetch(`/api/get-preregistrations?limit=1000`);
       const data = await response.json();
       if (data.success) {
         setRegistrations(data.data);

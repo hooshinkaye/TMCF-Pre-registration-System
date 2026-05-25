@@ -170,7 +170,7 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
       fd.append('profile_pic', formData.profile_pic);
     }
 
-    fetch('/api/submit-preregistration.php', {
+    fetch('/api/submit-preregistration', {
       method: 'POST',
       body: fd,
     })
