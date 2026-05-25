@@ -11,6 +11,7 @@ import { SuccessModal } from '@/components/SuccessModal';
 import { CaptchaModal } from '@/components/CaptchaModal';
 import { HomePage } from '@/pages/HomePage';
 import { SchedulePage } from '@/pages/SchedulePage';
+import { AdminPage } from '@/pages/AdminPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -56,6 +57,10 @@ function AppContent() {
         <Route
           path="/schedule"
           element={<SchedulePage />}
+        />
+        <Route
+          path="/admin"
+          element={<AdminPage />}
         />
       </Routes>
 

@@ -170,7 +170,7 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
       fd.append('profile_pic', formData.profile_pic);
     }
 
-    fetch('https://xt.pbhitsolution.info/enrollment_hub/process_pre_reg.php', {
+    fetch('/api/submit-preregistration.php', {
       method: 'POST',
       body: fd,
     })
