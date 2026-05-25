@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-COPY tsconfig.json tsconfig.app.json index.html vite.config.ts postcss.config.js tailwind.config.js ./
+COPY tsconfig.json tsconfig.app.json tsconfig.node.json index.html vite.config.ts postcss.config.js tailwind.config.js ./
 COPY src src/
 COPY public public/
 
