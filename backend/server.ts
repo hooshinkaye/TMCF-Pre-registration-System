@@ -3,16 +3,16 @@ import cors from 'cors';
 import path from 'path';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
-import { initializeDatabase } from './db';
-import preregistrationRoutes from './routes/preregistrations';
+import { fileURLToPath } from 'url';
+import { initializeDatabase } from './db.js';
+import preregistrationRoutes from './routes/preregistrations.js';
 
 dotenv.config();
 
-const app: Express = express();
-const PORT = process.env.PORT || 5000;
-
 // ── Get application root directory ──
-const rootDir = process.cwd();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
 
 // ── Middleware ──
 app.use(cors());
