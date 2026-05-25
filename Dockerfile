@@ -11,7 +11,7 @@ COPY tsconfig.json tsconfig.app.json tsconfig.node.json index.html vite.config.t
 COPY src src/
 COPY public public/
 
-RUN npm run build
+RUN npm run build:frontend
 
 # Stage 2: Build backend  
 FROM node:20-alpine AS backend-builder
