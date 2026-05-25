@@ -2,17 +2,12 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
 import { query } from '../db';
 
 const router = Router();
 
-// ── Define __dirname for ES modules ──
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 // ── File Upload Setup ──
-const uploadsDir = path.join(import.meta.dirname, '../uploads/profile_pics');
+const uploadsDir = path.join(process.cwd(), 'uploads/profile_pics');
 const storage = multer.diskStorage({
   destination: uploadsDir,
   filename: (req, file, cb) => {

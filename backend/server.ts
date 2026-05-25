@@ -3,24 +3,22 @@ import cors from 'cors';
 import path from 'path';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
 import { initializeDatabase } from './db';
 import preregistrationRoutes from './routes/preregistrations';
 
 dotenv.config();
 
-// ── Define __dirname for ES modules ──
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
+
+// ── Get application root directory ──
+const rootDir = process.cwd();
 
 // ── Middleware ──
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(rootDir, 'uploads')));
 
 // ── Health Check ──
 app.get('/health', (req: Request, res: Response) => {
@@ -46,7 +44,7 @@ initializeDatabase()
 app.use('/api', preregistrationRoutes);
 
 // ── Serve React Frontend (production) ──
-const distPath = path.join(__dirname, '../dist');
+const distPath = path.join(rootDir, 'dist');
 app.use(express.static(distPath));
 
 // ── Fallback to React for client-side routing ──
