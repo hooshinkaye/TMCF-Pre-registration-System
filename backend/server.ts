@@ -12,7 +12,8 @@ dotenv.config();
 // ── Get application root directory ──
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
+// __dirname is dist/backend, so parent is dist, grandparent is /app
+const rootDir = path.resolve(__dirname, '../..');
 
 // ── Initialize Express App ──
 const app: Express = express();
@@ -44,7 +45,7 @@ initializeDatabase()
     }
   });
 
-// ── API Routes ──
+// ── API Routes (MUST be before static files) ──
 app.use('/api', preregistrationRoutes);
 
 // ── Serve React Frontend (production) ──
