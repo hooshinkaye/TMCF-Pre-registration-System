@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw, LogOut } from 'lucide-react';
 
 interface PreRegistration {
   id: number;
@@ -14,7 +14,11 @@ interface PreRegistration {
   submitted_at: string;
 }
 
-export function AdminDashboard() {
+interface AdminDashboardProps {
+  onLogout?: () => void;
+}
+
+export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [registrations, setRegistrations] = useState<PreRegistration[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -99,9 +103,21 @@ export function AdminDashboard() {
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Pre-Registration Dashboard</h1>
-          <p className="text-slate-600">Total Submissions: {registrations.length}</p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Pre-Registration Dashboard</h1>
+            <p className="text-slate-600">Total Submissions: {registrations.length}</p>
+          </div>
+          {onLogout && (
+            <Button
+              onClick={onLogout}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <LogOut size={16} />
+              Logout
+            </Button>
+          )}
         </div>
 
         {/* Charts */}

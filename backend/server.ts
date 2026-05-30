@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { initializeDatabase } from './db.js';
 import preregistrationRoutes from './routes/preregistrations.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -53,6 +54,7 @@ initializeDatabase()
 // ── API Routes (MUST be before static files) ──
 console.log('📍 Registering API routes at /api');
 app.use('/api', preregistrationRoutes);
+app.use('/api', authRoutes);
 
 // ── Serve React Frontend (production) ──
 const distPath = path.join(rootDir, 'dist');

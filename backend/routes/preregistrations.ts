@@ -3,7 +3,19 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
 import { query } from '../db.js';
+
+const router = Router();
+
+// ── Rate Limiting for Form Submissions ──
+const formSubmitLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 submissions per IP per 15 minutes
+  message: 'Too many form submissions from this IP address. Please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const router = Router();
 
@@ -45,7 +57,7 @@ const upload = multer({
 })();
 
 // ── POST: Submit Pre-Registration ──
-router.post('/submit-preregistration', upload.single('profile_pic'), async (req: Request, res: Response) => {
+router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile_pic'), async (req: Request, res: Response) => {
   try {
     // Honeypot check
     if (req.body.website_url) {
