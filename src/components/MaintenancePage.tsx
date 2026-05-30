@@ -1,17 +1,10 @@
 import { motion } from "framer-motion"
-import { Clock, CalendarDays, BookOpen } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { BookOpen } from "lucide-react"
 
 interface Props {
   nextOpen: string
   currentTime: string
 }
-
-const schedule = [
-  { days: "Monday – Saturday", slots: ["8:00 AM – 11:00 AM", "1:00 PM – 4:00 PM"] },
-  { days: "Sunday", slots: ["Closed"] },
-]
 
 export function MaintenancePage({ nextOpen, currentTime }: Props) {
   return (
@@ -56,62 +49,11 @@ export function MaintenancePage({ nextOpen, currentTime }: Props) {
           {/* Body */}
           <div className="px-8 py-6 space-y-6">
 
-            {/* Current time */}
-            <div className="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3">
-              <div className="flex items-center gap-2 text-slate-500 text-sm">
-                <Clock className="w-4 h-4" />
-                <span>Current time (PHT)</span>
-              </div>
-              <span className="font-semibold text-slate-700 text-sm">
-                {currentTime}
-              </span>
-            </div>
-
-            {/* Next opening */}
-            <motion.div
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.35 }}
-              className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"
-            >
-              <span className="text-amber-700 text-sm font-medium">
-                Next opening
-              </span>
-              <Badge className="bg-[#c9a227] text-[#0d2b5e] hover:bg-[#c9a227]">
-                {nextOpen}
-              </Badge>
-            </motion.div>
-
-            <Separator />
-
-            {/* Schedule */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <CalendarDays className="w-4 h-4 text-[#1251a3]" />
-                <span className="text-sm font-semibold text-slate-700">
-                  Operating Schedule
-                </span>
-              </div>
-              <div className="space-y-2">
-                {schedule.map((row, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + i * 0.1 }}
-                    className="flex items-start justify-between py-2 border-b border-slate-100 last:border-0"
-                  >
-                    <span className="text-sm font-medium text-slate-600">
-                      {row.days}
-                    </span>
-                    <div className="text-right space-y-0.5">
-                      {row.slots.map((s, j) => (
-                        <p key={j} className="text-sm text-slate-500">{s}</p>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+            {/* Message */}
+            <div className="bg-slate-50 rounded-xl px-4 py-4">
+              <p className="text-slate-600 text-sm leading-relaxed">
+                The enrollment portal is temporarily unavailable. Please try again later.
+              </p>
             </div>
 
             {/* Tip */}
