@@ -30,6 +30,11 @@ app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'OK' });
 });
 
+// ── Test endpoint ──
+app.get('/api-test', (req: Request, res: Response) => {
+  res.status(200).json({ message: 'API test endpoint working' });
+});
+
 // ── Initialize Database ──
 let dbReady = false;
 initializeDatabase()
@@ -46,10 +51,12 @@ initializeDatabase()
   });
 
 // ── API Routes (MUST be before static files) ──
+console.log('📍 Registering API routes at /api');
 app.use('/api', preregistrationRoutes);
 
 // ── Serve React Frontend (production) ──
 const distPath = path.join(rootDir, 'dist');
+console.log('📂 Serving static files from:', distPath);
 app.use(express.static(distPath));
 
 // ── Fallback to React for client-side routing ──
