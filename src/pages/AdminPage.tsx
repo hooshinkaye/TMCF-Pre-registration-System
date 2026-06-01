@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AdminDashboard } from '@/components/AdminDashboard';
+import { AdminDashboardNew } from '@/components/AdminDashboardNew';
 import { AdminLogin } from '@/components/AdminLogin';
 
 export function AdminPage() {
@@ -30,5 +30,5 @@ export function AdminPage() {
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return <AdminDashboard onLogout={handleLogout} />;
+  return <AdminDashboardNew />;
 }

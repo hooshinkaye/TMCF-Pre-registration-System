@@ -39,7 +39,7 @@ export function MaintenancePage({ nextOpen, currentTime }: Props) {
               <BookOpen className="w-8 h-8 text-[#0d2b5e]" />
             </motion.div>
             <h1 className="text-2xl font-bold text-white tracking-tight">
-              TMCFI Enrollment Hub
+              J.A.Q edu hub - Pre-Registration
             </h1>
             <p className="text-blue-200 text-sm mt-1">
               Portal is currently offline

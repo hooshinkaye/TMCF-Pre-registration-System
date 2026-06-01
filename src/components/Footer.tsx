@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
           {/* Brand */}
           <div className="text-center md:text-left">
-            <h5 className="text-[#D4A843] font-bold text-lg mb-3">TMCFI EDU-HUB</h5>
+            <h5 className="text-[#D4A843] font-bold text-lg mb-3">J.A.Q edu hub</h5>
             <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
               <a
                 href="https://www.facebook.com/tantingbing.tmcf"
@@ -44,7 +44,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 text-center">
           <p className="text-xs text-gray-500">
-            Tan Ting Bing Memorial Colleges Foundation, Inc.
+            JAQ National Colleges
           </p>
         </div>
       </div>

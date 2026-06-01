@@ -324,3 +324,46 @@ body {
 .p-lg {
   padding: var(--spacing-lg);
 }
+
+/* ============================================
+   MOBILE PERFORMANCE OPTIMIZATION
+   ============================================ */
+
+/* Reduce animations on mobile devices */
+@media (max-width: 768px) {
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.15s !important;
+  }
+  
+  .glass-card:hover {
+    transform: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+  
+  .animate-slide-up,
+  .animate-slide-down,
+  .animate-fade-in {
+    animation-duration: 0.3s !important;
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .glass-card:hover {
+    transform: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+}

@@ -9,7 +9,7 @@ import { LoginModal } from '@/components/LoginModal';
 import { TermsModal } from '@/components/TermsModal';
 import { SuccessModal } from '@/components/SuccessModal';
 import { CaptchaModal } from '@/components/CaptchaModal';
-import { HomePage } from '@/pages/HomePage';
+import { HomePageNew } from '@/pages/HomePageNew';
 import { SchedulePage } from '@/pages/SchedulePage';
 import { AdminPage } from '@/pages/AdminPage';
 import '@/styles/design-system.css';
@@ -47,7 +47,7 @@ function AppContent() {
           element={
             <>
               <Navbar onRegisterClick={() => setRegisterOpen(true)} />
-              <HomePage
+              <HomePageNew
                 onRegister={() => setRegisterOpen(true)}
                 onLogin={() => setLoginOpen(true)}
               />

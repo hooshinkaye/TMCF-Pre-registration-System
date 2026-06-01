@@ -215,10 +215,16 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     }),
   };
 
+  // Check if we're on mobile for animation optimization
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const transitionConfig = isMobile 
+    ? { duration: 0.2, ease: 'easeInOut' }
+    : { type: 'spring', stiffness: 300, damping: 30 };
+
   const stepContent = [
     null,
     // Step 1: Personal Information
-    <motion.div key="step1" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="space-y-4">
+    <motion.div key="step1" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={transitionConfig} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="firstName" className="block text-sm font-bold mb-2 text-slate-900">First Name *</Label>
@@ -303,7 +309,7 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     </motion.div>,
 
     // Step 2: Contact & Location
-    <motion.div key="step2" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="space-y-4">
+    <motion.div key="step2" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={transitionConfig} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="email" className="block text-sm font-bold mb-2 text-slate-900">Email Address *</Label>
@@ -379,7 +385,7 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     </motion.div>,
 
     // Step 3: Program & Photo
-    <motion.div key="step3" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="space-y-4">
+    <motion.div key="step3" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={transitionConfig} className="space-y-4">
       <div>
         <Label htmlFor="program" className="block text-sm font-bold mb-2 text-slate-900">Program of Interest *</Label>
         <select name="program" value={formData.program} onChange={handleInputChange} className="form-select">
@@ -424,7 +430,7 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     </motion.div>,
 
     // Step 4: Review & Confirm
-    <motion.div key="step4" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={{ type: 'spring', stiffness: 300, damping: 30 }} className="space-y-4">
+    <motion.div key="step4" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" transition={transitionConfig} className="space-y-4">
       <div className="glass-card !p-4 space-y-3">
         <div className="flex items-center gap-3">
           <CheckCircle className="w-5 h-5 text-green-600" />

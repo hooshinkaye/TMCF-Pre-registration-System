@@ -42,7 +42,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
             <GraduationCap className={`w-5 h-5 ${isScrolled ? 'text-[#D4A843]' : 'text-white'}`} />
           </div>
           <span className={`font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-[#0B1F3F]' : 'text-white'}`}>
-            TMCFI
+            J.A.Q
           </span>
         </Link>
 

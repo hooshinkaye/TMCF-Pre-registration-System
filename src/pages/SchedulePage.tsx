@@ -22,7 +22,7 @@ export function SchedulePage() {
               <h1 className="text-xl sm:text-2xl lg:text-[28px] font-extrabold text-white tracking-tight">
                 CLASS SCHEDULES
               </h1>
-              <p className="text-[10px] text-gray-500 uppercase tracking-[3px]">TMCFI</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-[3px]">J.A.Q</p>
             </div>
           </div>
         </div>
