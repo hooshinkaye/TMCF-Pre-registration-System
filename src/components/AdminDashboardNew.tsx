@@ -8,6 +8,7 @@ import {
   LayoutDashboard, LogOut, Menu, RefreshCw, Search, Settings, ShieldCheck,
   Table2, Users,
 } from 'lucide-react';
+import { SchoolLogo } from '@/components/SchoolLogo';
 
 interface PreRegistration {
   id: number;
@@ -182,7 +183,11 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#11102a] text-white transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-20 items-center border-b border-white/10 px-7">
-          <div className="text-2xl font-black tracking-wide text-sky-400">TMCF</div>
+          <SchoolLogo
+            showTagline
+            markClassName="bg-white text-slate-950"
+            textClassName="text-white"
+          />
         </div>
         <nav className="px-4 py-6">
           <p className="mb-4 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">Menu</p>

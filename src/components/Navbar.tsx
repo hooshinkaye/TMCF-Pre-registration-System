@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, GraduationCap } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { SchoolLogo } from '@/components/SchoolLogo';
 
 interface NavbarProps {
   onRegisterClick: () => void;
@@ -34,12 +35,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isScrolled ? 'bg-[#0B1F3F]' : 'bg-[#0B1F3F]'}`}>
-            <GraduationCap className={`w-5 h-5 ${isScrolled ? 'text-[#D4A843]' : 'text-[#D4A843]'}`} />
-          </div>
-          <span className={`font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-[#0B1F3F]' : 'text-[#0B1F3F]'}`}>
-            J.A.Q
-          </span>
+          <SchoolLogo markClassName="h-9 w-9 rounded-lg" textClassName="text-lg" />
         </Link>
 
         {/* Desktop Links */}

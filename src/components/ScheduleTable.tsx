@@ -1,4 +1,4 @@
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, Filter, Search } from 'lucide-react';
 
 interface ScheduleData {
   time: string;
@@ -14,9 +14,23 @@ interface ScheduleTableProps {
 export function ScheduleTable({ data }: ScheduleTableProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-        <CalendarDays className="w-12 h-12 mb-3 text-gray-300" />
-        <p className="text-sm">Select filters above to view your class schedule</p>
+      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 shadow-sm">
+        <div className="mx-auto flex max-w-md flex-col items-center justify-center py-10 text-center">
+          <div className="relative mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-slate-100 text-slate-500">
+            <CalendarDays className="h-8 w-8" />
+            <div className="absolute -right-2 -top-2 grid h-8 w-8 place-items-center rounded-full bg-amber-400 text-slate-950">
+              <Search className="h-4 w-4" />
+            </div>
+          </div>
+          <h2 className="text-xl font-black text-slate-950">No schedule selected yet</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            Use the finder above to open the official timetable for your program and section.
+          </p>
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-600">
+            <Filter className="h-4 w-4" />
+            Waiting for filters
+          </div>
+        </div>
       </div>
     );
   }

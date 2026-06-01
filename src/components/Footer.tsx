@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Instagram, MapPin } from 'lucide-react';
+import { SchoolLogo } from '@/components/SchoolLogo';
 
 export function Footer() {
   return (
@@ -7,7 +8,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
           {/* Brand */}
           <div className="text-center md:text-left">
-            <h5 className="text-[#D4A843] font-bold text-lg mb-3">J.A.Q edu hub</h5>
+            <SchoolLogo
+              showTagline
+              className="mb-4 justify-center md:justify-start"
+              markClassName="bg-white text-slate-950"
+              textClassName="text-white"
+            />
             <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
               <a
                 href="https://www.facebook.com/tantingbing.tmcf"
