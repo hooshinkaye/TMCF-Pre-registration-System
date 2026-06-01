@@ -42,7 +42,7 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
 
           {/* Subheading */}
           <p className="text-xl text-center text-slate-600 mb-12 max-w-2xl mx-auto">
-            Join JAQ National Colleges and unlock world-class education designed for student success. Pre-register now for the semester ahead.
+            Join Tan Ting Bing Memorial Colleges Foundation Inc. through the TMCFI Enrollment Hub. Pre-register now for the semester ahead.
           </p>
 
           {/* Feature Cards Grid */}
@@ -125,7 +125,7 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
 
           {/* Trust Signals */}
           <div className="text-center space-y-3 pt-8 border-t border-white/20">
-            <p className="text-sm text-slate-600 font-medium">Why Choose J.A.Q?</p>
+            <p className="text-sm text-slate-600 font-medium">Why Choose TMCFI Enrollment Hub?</p>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-700">
               <div className="flex items-center gap-2">
                 <span className="text-green-600 font-bold">✓</span>

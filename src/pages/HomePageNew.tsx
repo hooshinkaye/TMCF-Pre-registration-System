@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChevronRight, GraduationCap, Users, Award, Globe } from 'lucide-react';
+import { BookOpenCheck, ChevronRight, GraduationCap, Users, Award, Globe } from 'lucide-react';
 import { HeroNew } from '@/sections/HeroNew';
 import { SiteFooter } from '@/components/SiteFooter';
 
@@ -159,9 +159,12 @@ function AboutSection({ onRegister }: { onRegister: () => void }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <img src="/campus-front.png" alt="JAQ National Colleges campus" className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 to-transparent" />
-            <p className="absolute bottom-6 left-6 text-lg font-bold text-white">JAQ National Colleges</p>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0B1F3F] via-blue-700 to-[#D4A843]" />
+            <div className="relative z-10 p-8 text-white">
+              <BookOpenCheck className="mb-5 h-20 w-20 text-[#D4A843]" />
+              <p className="text-2xl font-black">Tan Ting Bing Memorial Colleges Foundation Inc.</p>
+              <p className="mt-2 text-sm font-semibold text-blue-100">TMCFI Enrollment Hub</p>
+            </div>
           </motion.div>
 
           {/* Right: Content */}
@@ -171,10 +174,10 @@ function AboutSection({ onRegister }: { onRegister: () => void }) {
             transition={{ duration: 0.4 }}
           >
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-6">
-              About J.A.Q edu hub
+              About TMCFI Enrollment Hub
             </h2>
             <p className="text-lg text-slate-600 mb-6">
-              JAQ National Colleges is committed to providing world-class education that transforms lives and empowers students to achieve their dreams.
+              Tan Ting Bing Memorial Colleges Foundation Inc. uses the TMCFI Enrollment Hub to make pre-registration clearer, faster, and easier for students and staff.
             </p>
             <ul className="space-y-4 mb-8">
               {[
@@ -208,7 +211,7 @@ function TestimonialsSection() {
     {
       name: 'Maria Santos',
       program: 'BSIT Student',
-      quote: 'JAQ National Colleges has given me the skills and confidence to pursue my career in tech.',
+      quote: 'TMCFI Enrollment Hub helped me complete pre-registration with less confusion and better guidance.',
       avatar: '👩‍🎓',
     },
     {
@@ -238,7 +241,7 @@ function TestimonialsSection() {
             What Students Say
           </h2>
           <p className="text-lg text-slate-600">
-            Hear from our students about their journey at JAQ
+            Hear from our students about their journey with TMCFI
           </p>
         </motion.div>
 

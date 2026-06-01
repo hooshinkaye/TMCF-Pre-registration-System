@@ -52,6 +52,8 @@ export async function initializeDatabase(): Promise<void> {
         longitude VARCHAR(50),
         quiz_answer TEXT,
         photo_filename VARCHAR(255),
+        status VARCHAR(30) DEFAULT 'pending',
+        reviewed_at TIMESTAMP,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -62,6 +64,9 @@ export async function initializeDatabase(): Promise<void> {
 
       ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS email VARCHAR(255);
       ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS phone VARCHAR(50);
+      ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS status VARCHAR(30) DEFAULT 'pending';
+      ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMP;
+      UPDATE pre_registrations SET status = 'pending' WHERE status IS NULL;
     `;
 
     await pool.query(sql);

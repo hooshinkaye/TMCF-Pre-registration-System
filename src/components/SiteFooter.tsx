@@ -14,7 +14,7 @@ export function SiteFooter() {
               textClassName="text-2xl text-white"
             />
             <p className="max-w-md text-sm leading-6 text-slate-400">
-              JAQ National Colleges empowers students through practical learning, modern facilities, and a student-centered admissions experience.
+              TMCFI Enrollment Hub supports Tan Ting Bing Memorial Colleges Foundation Inc. with a student-centered pre-registration experience.
             </p>
             <div className="mt-6 flex gap-3">
               {[
@@ -66,7 +66,7 @@ export function SiteFooter() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-slate-500 sm:flex-row sm:px-6 lg:px-8">
-          <p>&copy; 2024 JAQ National Colleges. All rights reserved.</p>
+          <p>&copy; 2024 TMCFI Enrollment Hub. All rights reserved.</p>
           <div className="flex gap-5">
             <a href="#" className="hover:text-white">Privacy Policy</a>
             <a href="#" className="hover:text-white">Terms of Service</a>

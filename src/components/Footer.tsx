@@ -50,7 +50,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 text-center">
           <p className="text-xs text-gray-500">
-            JAQ National Colleges
+            TMCFI Enrollment Hub
           </p>
         </div>
       </div>

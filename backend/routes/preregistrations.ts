@@ -163,6 +163,45 @@ router.get('/get-preregistrations', async (req: Request, res: Response) => {
 });
 
 // ── POST: Initialize Database ──
+router.patch('/pre-registrations/:id/status', async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const status = String(req.body.status || '').toLowerCase();
+    const allowedStatuses = ['pending', 'verified', 'rejected'];
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'Invalid registration ID' });
+    }
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const result = await query(
+      `
+        UPDATE pre_registrations
+        SET status = $1,
+            reviewed_at = CASE WHEN $1 = 'pending' THEN NULL ELSE CURRENT_TIMESTAMP END
+        WHERE id = $2
+        RETURNING *;
+      `,
+      [status, id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Registration not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: result.rows[0],
+    });
+  } catch (err: unknown) {
+    console.error('Status update error:', err);
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Failed to update status' });
+  }
+});
+
 router.post('/init-db', async (req: Request, res: Response) => {
   try {
     // The database is initialized when the server starts

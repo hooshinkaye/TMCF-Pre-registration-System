@@ -39,7 +39,7 @@ export function MaintenancePage({ nextOpen, currentTime }: Props) {
               <BookOpen className="w-8 h-8 text-[#0d2b5e]" />
             </motion.div>
             <h1 className="text-2xl font-bold text-white tracking-tight">
-              J.A.Q edu hub - Pre-Registration
+              TMCFI Enrollment Hub - Pre-Registration
             </h1>
             <p className="text-blue-200 text-sm mt-1">
               Portal is currently offline
@@ -54,6 +54,16 @@ export function MaintenancePage({ nextOpen, currentTime }: Props) {
               <p className="text-slate-600 text-sm leading-relaxed">
                 The enrollment portal is temporarily unavailable. Please try again later.
               </p>
+              {currentTime && (
+                <p className="mt-3 text-xs font-semibold text-slate-500">
+                  Current system time: {currentTime}
+                </p>
+              )}
+              {nextOpen && (
+                <p className="mt-1 text-xs font-semibold text-slate-500">
+                  Next opening: {nextOpen}
+                </p>
+              )}
             </div>
 
             {/* Tip */}

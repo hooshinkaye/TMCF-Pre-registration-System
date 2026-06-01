@@ -12,7 +12,7 @@ const botResponses: Record<string, string> = {
   enrollment: 'To enroll: 1) Complete the online pre-registration form, 2) Submit your documents to the campus for Initial Setup, 3) Wait for account activation, 4) Log in to verify your subjects. Click "Register Now" to get started!',
   schedule: 'You can view class schedules by clicking "View Schedule" in the navigation menu. You\'ll need to select your Academic Year, Program, Year Level, Section, and Semester.',
   requirements: 'Required documents for enrollment: Form 138 (Report Card), PSA Birth Certificate, Certificate of Good Moral Character, 2x2 ID Photos (4 pieces), and Medical Certificate. Bring these to the Registrar\'s Office.',
-  contact: 'You can reach the Registrar\'s Office at JAQ National Colleges in Northern Samar, Philippines. Visit during system hours: Mon-Fri 8AM-11AM & 1PM-4PM, Sat 8AM-11AM.',
+  contact: 'You can reach the Registrar\'s Office at Tan Ting Bing Memorial Colleges Foundation Inc. in Northern Samar, Philippines. Visit during system hours: Mon-Fri 8AM-11AM & 1PM-4PM, Sat 8AM-11AM.',
   login: 'Only officially enrolled or confirmed students can log in. If you can\'t access your account, please visit the Registrar\'s Office for assistance.',
   password: 'First time logging in? Simply type any password to set it. Make sure to remember it for future access!',
   default: 'I\'m sorry, I didn\'t understand. Try asking about enrollment, schedule, requirements, login, password, or contact.',
@@ -92,7 +92,7 @@ export function Chatbot() {
                 <div className="w-8 h-8 rounded-full bg-[#D4A843]/20 border-2 border-[#D4A843] flex items-center justify-center">
                   <Bot className="w-4 h-4 text-[#D4A843]" />
                 </div>
-                <span className="text-white font-semibold text-sm">J.A.Q Assistant</span>
+                <span className="text-white font-semibold text-sm">TMCFI Enrollment Hub Assistant</span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -176,7 +176,7 @@ export function Chatbot() {
 
         {/* Hover Label */}
         <div className="absolute right-[70px] top-1/2 -translate-y-1/2 bg-[#333] text-white text-[13px] px-3 py-1.5 rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none hidden md:block">
-          J.A.Q Assistant
+          TMCFI Enrollment Hub Assistant
           <div className="absolute top-1/2 -translate-y-1/2 left-full -mt-0 border-[5px] border-transparent border-l-[#333]" />
         </div>
       </div>

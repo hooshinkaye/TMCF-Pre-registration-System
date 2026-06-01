@@ -10,7 +10,6 @@ export function SchedulePage() {
     <div className="min-h-screen flex flex-col bg-slate-50">
       {/* Header */}
       <header className="relative overflow-hidden bg-slate-950 no-print">
-        <img src="/campus-aerial.png" alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950/95 to-slate-900/90" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(212,168,67,0.28),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(37,99,235,0.22),_transparent_32%)]" />
         <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 pt-6 pb-20 sm:pt-8 sm:pb-24">
@@ -38,7 +37,7 @@ export function SchedulePage() {
                 Find your class schedule faster.
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-                Select your academic year, program, year level, section, and semester to open the official J.A.Q schedule viewer.
+                Select your academic year, program, year level, section, and semester to open the official TMCFI Enrollment Hub schedule viewer.
               </p>
             </div>
 

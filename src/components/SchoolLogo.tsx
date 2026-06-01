@@ -1,3 +1,4 @@
+import { BookOpenCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SchoolLogoProps {
@@ -19,20 +20,20 @@ export function SchoolLogo({
     <div className={cn('inline-flex items-center gap-3', className)}>
       <div
         className={cn(
-          'grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-slate-200',
+          'grid h-11 w-11 place-items-center rounded-xl bg-[#0B1F3F] text-[#D4A843] shadow-sm ring-1 ring-white/10',
           markClassName,
         )}
       >
-        <img src="/school-logo.png" alt="J.A.Q National Colleges logo" className="h-full w-full object-cover" />
+        <BookOpenCheck className="h-6 w-6" aria-hidden="true" />
       </div>
       {!compact && (
         <div className="leading-none">
           <div className={cn('text-lg font-black tracking-tight text-slate-950', textClassName)}>
-            J.A.Q
+            TMCFI
           </div>
           {showTagline && (
             <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.24em] text-slate-500">
-              Edu Hub
+              Enrollment Hub
             </div>
           )}
         </div>
