@@ -8,13 +8,15 @@ interface HomePageNewProps {
 }
 
 export function HomePageNew({ onRegister, onLogin }: HomePageNewProps) {
+  void onLogin;
+
   return (
     <>
       {/* Hero Section */}
       <HeroNew onRegisterClick={onRegister} />
 
       {/* Programs Section */}
-      <ProgramsNew />
+      <ProgramsNew onRegister={onRegister} />
 
       {/* About Section */}
       <AboutSection />
@@ -29,7 +31,7 @@ export function HomePageNew({ onRegister, onLogin }: HomePageNewProps) {
 }
 
 // New Programs Section
-function ProgramsNew() {
+function ProgramsNew({ onRegister }: { onRegister: () => void }) {
   const programs = [
     {
       icon: GraduationCap,
@@ -62,9 +64,10 @@ function ProgramsNew() {
     {
       icon: GraduationCap,
       title: 'K-12 Programs',
-      description: 'Strong foundation for lifelong learning and success',
+      description: 'Junior High School and Senior High School curriculum tracks',
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50',
+      curriculum: ['Junior High School', 'SHS Academic Track', 'SHS TVL Track', 'Arts and Design'],
     },
     {
       icon: Award,
@@ -110,6 +113,15 @@ function ProgramsNew() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">{prog.title}</h3>
                 <p className="text-slate-600 mb-4">{prog.description}</p>
+                {prog.curriculum && (
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {prog.curriculum.map((item) => (
+                      <span key={item} className="rounded-full bg-white px-3 py-1 text-xs font-bold text-purple-700 shadow-sm">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 group-hover:gap-3 transition-all">
                   Learn More
                   <ChevronRight className="w-4 h-4" />

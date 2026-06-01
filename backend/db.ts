@@ -36,6 +36,8 @@ export async function initializeDatabase(): Promise<void> {
         first_name VARCHAR(100) NOT NULL,
         middle_name VARCHAR(100),
         ext_name VARCHAR(50),
+        email VARCHAR(255),
+        phone VARCHAR(50),
         gender VARCHAR(20),
         birthdate DATE,
         age INTEGER,
@@ -57,6 +59,9 @@ export async function initializeDatabase(): Promise<void> {
       CREATE INDEX IF NOT EXISTS idx_submitted_at ON pre_registrations(submitted_at DESC);
       CREATE INDEX IF NOT EXISTS idx_program ON pre_registrations(program);
       CREATE INDEX IF NOT EXISTS idx_last_name ON pre_registrations(last_name);
+
+      ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+      ALTER TABLE pre_registrations ADD COLUMN IF NOT EXISTS phone VARCHAR(50);
     `;
 
     await pool.query(sql);
@@ -74,7 +79,7 @@ export async function initializeDatabase(): Promise<void> {
 
 export async function query(
   text: string,
-  params?: any[]
+  params?: unknown[]
 ): Promise<QueryResult> {
   return pool.query(text, params);
 }

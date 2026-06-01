@@ -20,7 +20,7 @@ const formSubmitLimiter = rateLimit({
 // ── Get application root directory ──
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(__dirname, '../..');
 
 // ── File Upload Setup ──
 const uploadsDir = path.join(rootDir, 'uploads/profile_pics');
@@ -67,8 +67,20 @@ router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile
       prog, shsg, shss, jhsg, elemg, lat, lng, quiz,
     } = req.body;
 
+    const lastName = ln || req.body.last_name || req.body.lastName;
+    const firstName = fn || req.body.first_name || req.body.firstName;
+    const middleName = mn || req.body.middle_name || req.body.middleName;
+    const extensionName = ext || req.body.ext_name || req.body.extension;
+    const gender = gen || req.body.gender;
+    const birthdate = bday || req.body.birth_date || req.body.birthDate;
+    const religion = rel || req.body.religion || req.body.relationship;
+    const address = addr || req.body.address;
+    const program = prog || req.body.program;
+    const email = req.body.email || null;
+    const phone = req.body.phone || null;
+
     // Validate required fields
-    if (!ln || !fn || !prog) {
+    if (!lastName || !firstName || !program) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -77,14 +89,24 @@ router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile
     const sql = `
       INSERT INTO pre_registrations (
         last_name, first_name, middle_name, ext_name, gender, birthdate, age, religion, address,
-        program, shsg, shss, jhsg, elemg, latitude, longitude, quiz_answer, photo_filename
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        program, shsg, shss, jhsg, elemg, latitude, longitude, quiz_answer, photo_filename, email, phone
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
       RETURNING id;
     `;
 
     const result = await query(sql, [
-      ln, fn, mn || null, ext || null, gen || null, bday || null, age || null, rel || null, addr || null,
-      prog, shsg || null, shss || null, jhsg || null, elemg || null, lat || null, lng || null, quiz || null, photoFilename,
+      lastName, firstName, middleName || null, extensionName || null, gender || null, birthdate || null,
+      age || req.body.age || null, religion || null, address || null, program,
+      shsg || req.body.seniorHighSchoolYear || null,
+      shss || req.body.seniorHighSchool || null,
+      jhsg || req.body.juniorHighSchool || null,
+      elemg || req.body.elementary || null,
+      lat || req.body.latitude || null,
+      lng || req.body.longitude || null,
+      quiz || req.body.quiz_answer || null,
+      photoFilename,
+      email,
+      phone,
     ]);
 
     res.status(200).json({
@@ -92,9 +114,9 @@ router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile
       message: 'Pre-registration submitted successfully',
       id: result.rows[0].id,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Submission error:', err);
-    res.status(500).json({ error: err.message || 'Submission failed' });
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Submission failed' });
   }
 });
 
@@ -106,7 +128,7 @@ router.get('/get-preregistrations', async (req: Request, res: Response) => {
     const offset = parseInt(req.query.offset as string) || 0;
 
     let whereSql = '';
-    const params: any[] = [];
+    const params: Array<string | number> = [];
 
     if (program) {
       whereSql = 'WHERE program = $1';
@@ -137,9 +159,9 @@ router.get('/get-preregistrations', async (req: Request, res: Response) => {
       offset,
       data: result.rows,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Retrieval error:', err);
-    res.status(500).json({ error: err.message || 'Failed to retrieve registrations' });
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Failed to retrieve registrations' });
   }
 });
 
@@ -152,8 +174,8 @@ router.post('/init-db', async (req: Request, res: Response) => {
       success: true,
       message: 'Database is ready',
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    res.status(500).json({ error: err instanceof Error ? err.message : 'Database initialization failed' });
   }
 });
 

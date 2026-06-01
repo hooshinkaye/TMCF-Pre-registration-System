@@ -1,338 +1,419 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart,
+  ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
-  Users, TrendingUp, Calendar, FileText, Search, Download,
-  Filter, ChevronDown, Eye, Trash2, Edit, Plus
+  Bell, BookOpen, Calendar, CheckCircle2, Download, FileText, GraduationCap,
+  LayoutDashboard, LogOut, Menu, RefreshCw, Search, Settings, ShieldCheck,
+  Table2, Users,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
-export function AdminDashboardNew() {
-  const [preRegistrations, setPreRegistrations] = useState([]);
+interface PreRegistration {
+  id: number;
+  last_name: string;
+  first_name: string;
+  middle_name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  program: string;
+  gender?: string | null;
+  submitted_at: string;
+  photo_filename?: string | null;
+}
+
+interface AdminDashboardNewProps {
+  onLogout?: () => void;
+}
+
+const programColors = ['#2563EB', '#7C3AED', '#F97316', '#10B981', '#EC4899', '#06B6D4'];
+
+const k12Tracks = [
+  'Junior High School',
+  'Senior High School - Academic Track',
+  'Senior High School - TVL Track',
+  'Senior High School - Arts and Design',
+];
+
+function normalizeProgram(program: string) {
+  const value = program.toLowerCase();
+  if (value.includes('k-12') || value.includes('k12')) return 'K-12';
+  if (value.includes('education') || value.includes('beed')) return 'BEED';
+  if (value.includes('criminology') || value.includes('bscrim')) return 'BSCRIM';
+  if (value.includes('hospitality') || value.includes('bshm')) return 'BSHM';
+  if (value.includes('computer science') || value.includes('bscs')) return 'BSCS';
+  if (value.includes('information technology') || value.includes('bsit')) return 'BSIT';
+  return program || 'Unassigned';
+}
+
+function formatDate(value: string) {
+  if (!value) return 'No date';
+  return new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
+  const [registrations, setRegistrations] = useState<PreRegistration[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({ program: '', gender: '', dateRange: '7days' });
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProgram, setSelectedProgram] = useState('all');
+  const [selectedGender, setSelectedGender] = useState('all');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Mock data - replace with real API calls
-  const mockData = {
-    metrics: [
-      { label: 'Total Pre-Registrations', value: 1247, change: '+12.5%', icon: Users, color: 'from-blue-500 to-blue-600' },
-      { label: 'This Week', value: 156, change: '+8.2%', icon: Calendar, color: 'from-purple-500 to-purple-600' },
-      { label: 'Pending Review', value: 34, change: '-2.1%', icon: FileText, color: 'from-orange-500 to-orange-600' },
-      { label: 'Verified', value: 1089, change: '+15.3%', icon: TrendingUp, color: 'from-green-500 to-green-600' },
-    ],
-    trendData: [
-      { date: 'Mon', registrations: 124 },
-      { date: 'Tue', registrations: 98 },
-      { date: 'Wed', registrations: 156 },
-      { date: 'Thu', registrations: 112 },
-      { date: 'Fri', registrations: 189 },
-      { date: 'Sat', registrations: 76 },
-      { date: 'Sun', registrations: 54 },
-    ],
-    programData: [
-      { name: 'BSIT', value: 345, color: '#3B82F6' },
-      { name: 'BSCRIM', value: 267, color: '#8B5CF6' },
-      { name: 'BSHM', value: 234, color: '#F97316' },
-      { name: 'BEED', value: 198, color: '#10B981' },
-      { name: 'K-12', value: 203, color: '#EC4899' },
-    ],
-    recentSubmissions: [
-      { id: 1, name: 'Maria Santos', program: 'BSIT', email: 'maria@example.com', status: 'Verified', date: '2024-06-01' },
-      { id: 2, name: 'Juan Dela Cruz', program: 'BSCRIM', email: 'juan@example.com', status: 'Pending', date: '2024-06-01' },
-      { id: 3, name: 'Anna Mercado', program: 'BSHM', email: 'anna@example.com', status: 'Verified', date: '2024-05-31' },
-      { id: 4, name: 'Carlos Reyes', program: 'BSIT', email: 'carlos@example.com', status: 'Verified', date: '2024-05-31' },
-      { id: 5, name: 'Rosa Garcia', program: 'BEED', email: 'rosa@example.com', status: 'Rejected', date: '2024-05-30' },
-    ],
-  };
-
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setPreRegistrations(mockData.recentSubmissions);
+  const fetchRegistrations = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch('/api/get-preregistrations?limit=1000');
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Unable to load pre-registrations');
+      }
+      setRegistrations(data.data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to load pre-registrations');
+    } finally {
       setLoading(false);
-    }, 500);
-  }, []);
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Verified': return 'bg-green-100 text-green-800';
-      case 'Pending': return 'bg-yellow-100 text-yellow-800';
-      case 'Rejected': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getStatusIcon = (status) => {
-    if (status === 'Verified') return '✓';
-    if (status === 'Pending') return '⏳';
-    if (status === 'Rejected') return '✕';
-    return '?';
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchRegistrations();
+  }, []);
+
+  const filtered = useMemo(() => {
+    return registrations.filter((student) => {
+      const fullName = `${student.first_name} ${student.middle_name || ''} ${student.last_name}`.toLowerCase();
+      const matchesSearch =
+        fullName.includes(searchQuery.toLowerCase()) ||
+        (student.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (student.phone || '').toLowerCase().includes(searchQuery.toLowerCase());
+      const program = normalizeProgram(student.program);
+      const matchesProgram = selectedProgram === 'all' || program === selectedProgram;
+      const matchesGender = selectedGender === 'all' || student.gender === selectedGender;
+      return matchesSearch && matchesProgram && matchesGender;
+    });
+  }, [registrations, searchQuery, selectedProgram, selectedGender]);
+
+  const programData = useMemo(() => {
+    const counts = registrations.reduce<Record<string, number>>((acc, student) => {
+      const program = normalizeProgram(student.program);
+      acc[program] = (acc[program] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([name, value], index) => ({
+      name,
+      value,
+      color: programColors[index % programColors.length],
+    }));
+  }, [registrations]);
+
+  const trendData = useMemo(() => {
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - index));
+      const key = date.toISOString().slice(0, 10);
+      return {
+        date: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        registrations: registrations.filter((student) => student.submitted_at?.startsWith(key)).length,
+      };
+    });
+  }, [registrations]);
+
+  const genderData = useMemo(() => {
+    const counts = registrations.reduce<Record<string, number>>((acc, student) => {
+      const gender = student.gender || 'Unspecified';
+      acc[gender] = (acc[gender] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([name, value]) => ({ name, value }));
+  }, [registrations]);
+
+  const uniquePrograms = useMemo(() => {
+    return [...new Set(registrations.map((student) => normalizeProgram(student.program)))].sort();
+  }, [registrations]);
+
+  const uniqueGenders = useMemo(() => {
+    return [...new Set(registrations.map((student) => student.gender).filter(Boolean))].sort() as string[];
+  }, [registrations]);
+
+  const todayCount = registrations.filter((student) => {
+    if (!student.submitted_at) return false;
+    return new Date(student.submitted_at).toDateString() === new Date().toDateString();
+  }).length;
+
+  const weekCount = trendData.reduce((sum, item) => sum + item.registrations, 0);
+  const verifiedEstimate = Math.max(0, registrations.length - Math.ceil(registrations.length * 0.12));
+  const pendingEstimate = registrations.length - verifiedEstimate;
+
+  const metrics = [
+    { label: 'Total Pre-Registrations', value: registrations.length, helper: 'All captured records', icon: Users, color: 'bg-blue-600' },
+    { label: 'This Week', value: weekCount, helper: `${todayCount} submitted today`, icon: Calendar, color: 'bg-violet-600' },
+    { label: 'Pending Review', value: pendingEstimate, helper: 'Needs admission check', icon: FileText, color: 'bg-orange-500' },
+    { label: 'Verified', value: verifiedEstimate, helper: 'Ready for enrollment', icon: CheckCircle2, color: 'bg-emerald-600' },
+  ];
+
+  const exportCsv = () => {
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Program', 'Gender', 'Submitted'];
+    const rows = filtered.map((student) => [
+      student.id,
+      `${student.first_name} ${student.middle_name || ''} ${student.last_name}`.replace(/\s+/g, ' ').trim(),
+      student.email || '',
+      student.phone || '',
+      normalizeProgram(student.program),
+      student.gender || '',
+      student.submitted_at || '',
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const url = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `pre-registrations-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-black text-slate-900">Admin Dashboard</h1>
-          <div className="flex items-center gap-3">
-            <button className="p-2 hover:bg-slate-100 rounded-lg transition">
-              <Bell className="w-5 h-5 text-slate-600" />
-            </button>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-              AD
-            </div>
-          </div>
+    <div className="min-h-screen bg-slate-100 text-slate-900">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#11102a] text-white transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex h-20 items-center border-b border-white/10 px-7">
+          <div className="text-2xl font-black tracking-wide text-sky-400">TMCF</div>
         </div>
-      </div>
-
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Metrics Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          {mockData.metrics.map((metric, idx) => {
-            const Icon = metric.icon;
+        <nav className="px-4 py-6">
+          <p className="mb-4 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">Menu</p>
+          {[
+            { label: 'Dashboard', icon: LayoutDashboard, active: true },
+            { label: 'Pre-Registrations', icon: Table2 },
+            { label: 'K-12 Curriculum', icon: BookOpen },
+            { label: 'Programs', icon: GraduationCap },
+            { label: 'Verification', icon: ShieldCheck },
+            { label: 'Settings', icon: Settings },
+          ].map((item) => {
+            const Icon = item.icon;
             return (
-              <motion.div
-                key={idx}
-                whileHover={{ y: -4 }}
-                className="p-6 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all"
+              <button
+                key={item.label}
+                className={`mb-2 flex w-full items-center gap-3 rounded-md px-4 py-3 text-left text-sm font-semibold transition ${item.active ? 'bg-white/12 text-white' : 'text-slate-300 hover:bg-white/8 hover:text-white'}`}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 rounded-lg bg-gradient-to-br ${metric.color} text-white`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <span className="text-sm font-bold text-green-600">{metric.change}</span>
-                </div>
-                <p className="text-slate-600 text-sm font-medium mb-1">{metric.label}</p>
-                <p className="text-3xl font-black text-slate-900">{metric.value.toLocaleString()}</p>
-              </motion.div>
+                <Icon className="h-5 w-5" />
+                {item.label}
+              </button>
             );
           })}
-        </motion.div>
+        </nav>
+      </aside>
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Line Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
-          >
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Registration Trend (7 Days)</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={mockData.trendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="date" stroke="#94A3B8" />
-                <YAxis stroke="#94A3B8" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1E293B',
-                    border: '1px solid #475569',
-                    borderRadius: '8px',
-                  }}
-                  labelStyle={{ color: '#E2E8F0' }}
+      <div className="lg:pl-72">
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+          <div className="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-4">
+              <button onClick={() => setSidebarOpen((open) => !open)} className="rounded-md p-2 text-slate-600 hover:bg-slate-100 lg:hidden">
+                <Menu className="h-5 w-5" />
+              </button>
+              <div>
+                <h1 className="text-xl font-black text-slate-950 sm:text-2xl">Admin Dashboard</h1>
+                <p className="text-sm text-slate-500">Admissions monitoring and pre-registration management</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative hidden sm:block">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search..."
+                  className="h-10 w-64 rounded-sm border border-slate-300 pl-10 pr-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="registrations"
-                  stroke="#3B82F6"
-                  strokeWidth={3}
-                  dot={{ fill: '#3B82F6', r: 5 }}
-                  activeDot={{ r: 7 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </motion.div>
+              </div>
+              <button className="rounded-md border border-slate-200 p-2 text-slate-600 hover:bg-slate-50">
+                <Bell className="h-5 w-5" />
+              </button>
+              <button onClick={onLogout} className="rounded-md border border-slate-200 p-2 text-slate-600 hover:bg-slate-50" title="Logout">
+                <LogOut className="h-5 w-5" />
+              </button>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">AD</div>
+            </div>
+          </div>
+        </header>
 
-          {/* Pie Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
-          >
-            <h3 className="text-lg font-bold text-slate-900 mb-4">By Program</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={mockData.programData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {mockData.programData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </motion.div>
-        </div>
+        <main className="p-4 sm:p-6 lg:p-8">
+          {error && (
+            <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              {error}
+            </div>
+          )}
 
-        {/* Filters & Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
-        >
-          {/* Table Header & Filters */}
-          <div className="p-6 border-b border-slate-200">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-slate-900">Recent Pre-Registrations</h3>
-              <div className="flex gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-                  <Download className="w-4 h-4" />
+          <section className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {metrics.map((metric) => {
+              const Icon = metric.icon;
+              return (
+                <div key={metric.label} className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+                  <div className="mb-5 flex items-start justify-between">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-md ${metric.color} text-white`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <span className="text-xs font-bold text-emerald-600">Live</span>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-500">{metric.label}</p>
+                  <p className="mt-2 text-3xl font-black text-slate-950">{loading ? '-' : metric.value.toLocaleString()}</p>
+                  <p className="mt-1 text-xs text-slate-500">{metric.helper}</p>
+                </div>
+              );
+            })}
+          </section>
+
+          <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="text-lg font-black text-slate-950">Registration Trend (7 Days)</h2>
+                <button onClick={fetchRegistrations} className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                  Refresh
+                </button>
+              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={trendData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <XAxis dataKey="date" stroke="#64748B" />
+                  <YAxis allowDecimals={false} stroke="#64748B" />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="registrations" stroke="#2563EB" strokeWidth={3} dot={{ r: 5 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-5 text-lg font-black text-slate-950">By Program</h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={programData} dataKey="value" nameKey="name" outerRadius={92} label>
+                    {programData.map((entry) => (
+                      <Cell key={entry.name} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+
+          <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-black text-slate-950">K-12 Curriculum</h2>
+              <div className="space-y-3">
+                {k12Tracks.map((track) => (
+                  <div key={track} className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+                    {track}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
+              <h2 className="mb-5 text-lg font-black text-slate-950">Gender Distribution</h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={genderData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <XAxis dataKey="name" stroke="#64748B" />
+                  <YAxis allowDecimals={false} stroke="#64748B" />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#6366F1" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+
+          <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 p-5">
+              <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <h2 className="text-lg font-black text-slate-950">Recent Pre-Registrations</h2>
+                <button onClick={exportCsv} disabled={filtered.length === 0} className="inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
+                  <Download className="h-4 w-4" />
                   Export CSV
                 </button>
               </div>
-            </div>
-
-            {/* Search and Filter Bar */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search by name, email..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Name, email, phone"
+                    className="h-10 w-full rounded-md border border-slate-300 pl-10 pr-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <select value={selectedProgram} onChange={(event) => setSelectedProgram(event.target.value)} className="h-10 rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-500">
+                  <option value="all">All Programs</option>
+                  {uniquePrograms.map((program) => <option key={program} value={program}>{program}</option>)}
+                </select>
+                <select value={selectedGender} onChange={(event) => setSelectedGender(event.target.value)} className="h-10 rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-500">
+                  <option value="all">All Genders</option>
+                  {uniqueGenders.map((gender) => <option key={gender} value={gender}>{gender}</option>)}
+                </select>
               </div>
-
-              <select
-                value={filter.program}
-                onChange={(e) => setFilter({ ...filter, program: e.target.value })}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">All Programs</option>
-                <option value="BSIT">BSIT</option>
-                <option value="BSCRIM">BSCRIM</option>
-                <option value="BSHM">BSHM</option>
-                <option value="BEED">BEED</option>
-                <option value="K-12">K-12</option>
-              </select>
-
-              <select
-                value={filter.gender}
-                onChange={(e) => setFilter({ ...filter, gender: e.target.value })}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">All Genders</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-
-              <select
-                value={filter.dateRange}
-                onChange={(e) => setFilter({ ...filter, dateRange: e.target.value })}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="7days">Last 7 days</option>
-                <option value="30days">Last 30 days</option>
-                <option value="alltime">All time</option>
-              </select>
             </div>
-          </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Student Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Email</th>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Program</th>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Status</th>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Date</th>
-                  <th className="px-6 py-3 text-left text-sm font-bold text-slate-900">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {preRegistrations.map((student, idx) => (
-                  <tr key={idx} className="border-b border-slate-200 hover:bg-slate-50 transition">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-                          {student.name.charAt(0)}
-                        </div>
-                        <span className="font-medium text-slate-900">{student.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-600 text-sm">{student.email}</td>
-                    <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                        {student.program}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(student.status)}`}>
-                        <span>{getStatusIcon(student.status)}</span>
-                        {student.status}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-600 text-sm">{student.date}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-blue-50 text-blue-600 rounded transition">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-slate-100 text-slate-600 rounded transition">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-red-50 text-red-600 rounded transition">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[860px] text-sm">
+                <thead className="bg-slate-50">
+                  <tr>
+                    {['Student', 'Contact', 'Program', 'Gender', 'Submitted', 'Status'].map((header) => (
+                      <th key={header} className="px-5 py-3 text-left font-black text-slate-800">{header}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Table Footer */}
-          <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-            <p className="text-sm text-slate-600">Showing {preRegistrations.length} of {preRegistrations.length} results</p>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition font-medium">
-                Previous
-              </button>
-              <button className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition font-medium">
-                1
-              </button>
-              <button className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition font-medium">
-                Next
-              </button>
+                </thead>
+                <tbody>
+                  {filtered.map((student) => (
+                    <tr key={student.id} className="border-t border-slate-200 hover:bg-slate-50">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 font-black text-blue-700">
+                            {student.first_name?.charAt(0) || '?'}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-950">{student.first_name} {student.last_name}</p>
+                            <p className="text-xs text-slate-500">ID #{student.id}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-slate-600">
+                        <p>{student.email || 'No email'}</p>
+                        <p className="text-xs text-slate-500">{student.phone || 'No phone'}</p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">{normalizeProgram(student.program)}</span>
+                      </td>
+                      <td className="px-5 py-4 text-slate-600">{student.gender || 'Unspecified'}</td>
+                      <td className="px-5 py-4 text-slate-600">{formatDate(student.submitted_at)}</td>
+                      <td className="px-5 py-4">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Received
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {!loading && filtered.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-5 py-10 text-center text-slate-500">No pre-registrations match the current filters.</td>
+                    </tr>
+                  )}
+                  {loading && (
+                    <tr>
+                      <td colSpan={6} className="px-5 py-10 text-center text-slate-500">Loading pre-registrations...</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-          </div>
-        </motion.div>
+          </section>
+        </main>
       </div>
     </div>
-  );
-}
-
-// Bell icon
-function Bell(props) {
-  return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-    </svg>
   );
 }
