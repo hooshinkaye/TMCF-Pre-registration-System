@@ -9,6 +9,7 @@ import { LoginModal } from '@/components/LoginModal';
 import { TermsModal } from '@/components/TermsModal';
 import { SuccessModal } from '@/components/SuccessModal';
 import { CaptchaModal } from '@/components/CaptchaModal';
+import { AppErrorBoundary } from '@/components/AppErrorBoundary';
 import { HomePageNew } from '@/pages/HomePageNew';
 import { SchedulePage } from '@/pages/SchedulePage';
 import { AdminPage } from '@/pages/AdminPage';
@@ -26,16 +27,17 @@ function AppContent() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
-  const [successOpen, setSuccessOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(() => {
+    return new URLSearchParams(window.location.search).get('status') === 'success';
+  });
   const [captchaOpen, setCaptchaOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('status') === 'success') {
-      setSuccessOpen(true);
+    if (successOpen && params.get('status') === 'success') {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [successOpen]);
 
   return (
     <>
@@ -47,11 +49,13 @@ function AppContent() {
           element={
             <>
               <Navbar onRegisterClick={() => setRegisterOpen(true)} />
-              <HomePageNew
-                onRegister={() => setRegisterOpen(true)}
-                onLogin={() => setLoginOpen(true)}
-              />
-              <Chatbot />
+              <AppErrorBoundary>
+                <HomePageNew
+                  onRegister={() => setRegisterOpen(true)}
+                  onLogin={() => setLoginOpen(true)}
+                />
+                <Chatbot />
+              </AppErrorBoundary>
             </>
           }
         />

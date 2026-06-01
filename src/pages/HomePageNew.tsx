@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Facebook, Instagram, Mail, MapPin, Phone, ChevronRight, GraduationCap, Users, Award, Globe } from 'lucide-react';
 import { HeroNew } from '@/sections/HeroNew';
 
@@ -81,32 +80,22 @@ function ProgramsNew({ onRegister }: { onRegister: () => void }) {
   return (
     <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center mb-16"
-        >
+        <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-4">
             Our Programs
           </h2>
           <p className="text-lg text-slate-600">
             Explore our diverse range of academic programs designed to prepare you for success
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {programs.map((prog, idx) => {
             const Icon = prog.icon;
             return (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05 }}
-                whileHover={{ y: -4 }}
-                className={`p-8 rounded-2xl ${prog.bgColor} border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group cursor-pointer`}
+                className={`p-8 rounded-2xl ${prog.bgColor} border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group cursor-pointer hover:-translate-y-1`}
               >
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${prog.color} text-white mb-4`}>
                   <Icon className="w-6 h-6" />
@@ -126,22 +115,17 @@ function ProgramsNew({ onRegister }: { onRegister: () => void }) {
                   Learn More
                   <ChevronRight className="w-4 h-4" />
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
+        <div className="text-center mt-16">
           <button onClick={onRegister} className="btn btn-primary rounded-lg">
             Explore All Programs
             <ChevronRight className="w-5 h-5" />
           </button>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -154,24 +138,15 @@ function AboutSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left: Image/Placeholder */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center"
-          >
+          <div className="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center">
             <div className="text-center text-white">
               <GraduationCap className="w-32 h-32 mx-auto opacity-30 mb-4" />
               <p className="text-lg font-semibold">JAQ National Colleges</p>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
+          <div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-6">
               About J.A.Q edu hub
             </h2>
@@ -197,7 +172,7 @@ function AboutSection() {
               Get Started Today
               <ChevronRight className="w-5 h-5" />
             </button>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -230,28 +205,19 @@ function TestimonialsSection() {
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center mb-16"
-        >
+        <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-4">
             What Students Say
           </h2>
           <p className="text-lg text-slate-600">
             Hear from our students about their journey at JAQ
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
               className="p-8 rounded-2xl bg-slate-50 border border-slate-200 hover:shadow-lg transition-all"
             >
               <div className="flex items-center gap-4 mb-4">
@@ -267,7 +233,7 @@ function TestimonialsSection() {
                   <span key={i} className="text-yellow-400">★</span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

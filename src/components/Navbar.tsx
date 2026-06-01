@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Menu, GraduationCap } from 'lucide-react';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -25,15 +24,12 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
   };
 
   return (
-    <motion.nav
+    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-[#F0EEEA]'
           : 'bg-white/80 backdrop-blur-md border-b border-white/60'
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
         {/* Logo */}
@@ -125,6 +121,6 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
           </SheetContent>
         </Sheet>
       </div>
-    </motion.nav>
+    </nav>
   );
 }
