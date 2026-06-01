@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
@@ -60,6 +60,15 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
   const [selectedProgram, setSelectedProgram] = useState('all');
   const [selectedGender, setSelectedGender] = useState('all');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('Dashboard');
+  const [notice, setNotice] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState<PreRegistration | null>(null);
+  const [verifiedIds, setVerifiedIds] = useState<number[]>([]);
+
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const programsRef = useRef<HTMLDivElement>(null);
+  const k12Ref = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const fetchRegistrations = async () => {
     setLoading(true);
@@ -179,6 +188,33 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
     document.body.removeChild(link);
   };
 
+  const navigateSection = (label: string) => {
+    setActiveSection(label);
+    setSidebarOpen(false);
+    const target =
+      label === 'Dashboard' ? dashboardRef :
+      label === 'Programs' ? programsRef :
+      label === 'K-12 Curriculum' ? k12Ref :
+      tableRef;
+
+    if (label === 'Verification') {
+      setNotice('Verification view active. Use the row actions to review or mark records verified.');
+    } else if (label === 'Settings') {
+      setNotice('Settings are handled through environment variables on Render for now.');
+    } else {
+      setNotice('');
+    }
+
+    window.setTimeout(() => {
+      target.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
+
+  const markVerified = (id: number) => {
+    setVerifiedIds((current) => current.includes(id) ? current : [...current, id]);
+    setNotice(`Record #${id} marked verified for this dashboard session.`);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#11102a] text-white transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -192,7 +228,7 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
         <nav className="px-4 py-6">
           <p className="mb-4 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">Menu</p>
           {[
-            { label: 'Dashboard', icon: LayoutDashboard, active: true },
+            { label: 'Dashboard', icon: LayoutDashboard },
             { label: 'Pre-Registrations', icon: Table2 },
             { label: 'K-12 Curriculum', icon: BookOpen },
             { label: 'Programs', icon: GraduationCap },
@@ -203,7 +239,8 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
             return (
               <button
                 key={item.label}
-                className={`mb-2 flex w-full items-center gap-3 rounded-md px-4 py-3 text-left text-sm font-semibold transition ${item.active ? 'bg-white/12 text-white' : 'text-slate-300 hover:bg-white/8 hover:text-white'}`}
+                onClick={() => navigateSection(item.label)}
+                className={`mb-2 flex w-full items-center gap-3 rounded-md px-4 py-3 text-left text-sm font-semibold transition ${activeSection === item.label ? 'bg-white/12 text-white' : 'text-slate-300 hover:bg-white/8 hover:text-white'}`}
               >
                 <Icon className="h-5 w-5" />
                 {item.label}
@@ -235,7 +272,11 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
                   className="h-10 w-64 rounded-sm border border-slate-300 pl-10 pr-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
               </div>
-              <button className="rounded-md border border-slate-200 p-2 text-slate-600 hover:bg-slate-50">
+              <button
+                onClick={() => setNotice(`Notifications: ${pendingEstimate} record${pendingEstimate === 1 ? '' : 's'} pending review.`)}
+                className="rounded-md border border-slate-200 p-2 text-slate-600 hover:bg-slate-50"
+                title="Notifications"
+              >
                 <Bell className="h-5 w-5" />
               </button>
               <button onClick={onLogout} className="rounded-md border border-slate-200 p-2 text-slate-600 hover:bg-slate-50" title="Logout">
@@ -246,10 +287,16 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
           </div>
         </header>
 
-        <main className="p-4 sm:p-6 lg:p-8">
+        <main ref={dashboardRef} className="p-4 sm:p-6 lg:p-8">
           {error && (
             <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
               {error}
+            </div>
+          )}
+          {notice && (
+            <div className="mb-6 flex items-center justify-between gap-4 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-800">
+              <span>{notice}</span>
+              <button onClick={() => setNotice('')} className="rounded px-2 py-1 text-xs font-bold hover:bg-blue-100">Dismiss</button>
             </div>
           )}
 
@@ -293,7 +340,7 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+            <div ref={programsRef} className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="mb-5 text-lg font-black text-slate-950">By Program</h2>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -309,7 +356,7 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
           </section>
 
           <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
-            <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+            <div ref={k12Ref} className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-black text-slate-950">K-12 Curriculum</h2>
               <div className="space-y-3">
                 {k12Tracks.map((track) => (
@@ -333,7 +380,7 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
             </div>
           </section>
 
-          <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+          <section ref={tableRef} className="rounded-md border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-200 p-5">
               <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <h2 className="text-lg font-black text-slate-950">Recent Pre-Registrations</h2>
@@ -367,7 +414,7 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
               <table className="w-full min-w-[860px] text-sm">
                 <thead className="bg-slate-50">
                   <tr>
-                    {['Student', 'Contact', 'Program', 'Gender', 'Submitted', 'Status'].map((header) => (
+                    {['Student', 'Contact', 'Program', 'Gender', 'Submitted', 'Status', 'Actions'].map((header) => (
                       <th key={header} className="px-5 py-3 text-left font-black text-slate-800">{header}</th>
                     ))}
                   </tr>
@@ -398,19 +445,35 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
                       <td className="px-5 py-4">
                         <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
                           <CheckCircle2 className="h-3.5 w-3.5" />
-                          Received
+                          {verifiedIds.includes(student.id) ? 'Verified' : 'Received'}
                         </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            onClick={() => setSelectedStudent(student)}
+                            className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => markVerified(student.id)}
+                            className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
+                          >
+                            Verify
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
                   {!loading && filtered.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="px-5 py-10 text-center text-slate-500">No pre-registrations match the current filters.</td>
+                      <td colSpan={7} className="px-5 py-10 text-center text-slate-500">No pre-registrations match the current filters.</td>
                     </tr>
                   )}
                   {loading && (
                     <tr>
-                      <td colSpan={6} className="px-5 py-10 text-center text-slate-500">Loading pre-registrations...</td>
+                      <td colSpan={7} className="px-5 py-10 text-center text-slate-500">Loading pre-registrations...</td>
                     </tr>
                   )}
                 </tbody>
@@ -419,6 +482,47 @@ export function AdminDashboardNew({ onLogout }: AdminDashboardNewProps) {
           </section>
         </main>
       </div>
+      {selectedStudent && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/50 p-4">
+          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl">
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-blue-600">Pre-registration</p>
+                <h2 className="mt-1 text-2xl font-black text-slate-950">
+                  {selectedStudent.first_name} {selectedStudent.last_name}
+                </h2>
+              </div>
+              <button onClick={() => setSelectedStudent(null)} className="rounded-md border border-slate-300 px-3 py-1 text-sm font-bold text-slate-600 hover:bg-slate-50">
+                Close
+              </button>
+            </div>
+            <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+              {[
+                ['Email', selectedStudent.email || 'No email'],
+                ['Phone', selectedStudent.phone || 'No phone'],
+                ['Program', normalizeProgram(selectedStudent.program)],
+                ['Gender', selectedStudent.gender || 'Unspecified'],
+                ['Submitted', formatDate(selectedStudent.submitted_at)],
+                ['Status', verifiedIds.includes(selectedStudent.id) ? 'Verified' : 'Received'],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-md bg-slate-50 p-3">
+                  <dt className="text-xs font-bold uppercase tracking-widest text-slate-500">{label}</dt>
+                  <dd className="mt-1 font-semibold text-slate-900">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <button
+              onClick={() => {
+                markVerified(selectedStudent.id);
+                setSelectedStudent(null);
+              }}
+              className="mt-5 w-full rounded-md bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"
+            >
+              Mark Verified
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

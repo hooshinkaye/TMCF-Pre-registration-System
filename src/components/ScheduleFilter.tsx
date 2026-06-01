@@ -38,9 +38,9 @@ export function ScheduleFilter() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
         {/* Academic Year */}
-        <div>
+        <div className="lg:col-span-2">
           <label className="block text-[11px] uppercase font-bold text-gray-400 tracking-wide mb-1.5">
             Acad. Year *
           </label>
@@ -55,7 +55,7 @@ export function ScheduleFilter() {
         </div>
 
         {/* Program */}
-        <div>
+        <div className="lg:col-span-2">
           <label className="block text-[11px] uppercase font-bold text-gray-400 tracking-wide mb-1.5">
             Program *
           </label>
@@ -78,7 +78,7 @@ export function ScheduleFilter() {
         </div>
 
         {/* Year */}
-        <div>
+        <div className="lg:col-span-2">
           <label className="block text-[11px] uppercase font-bold text-gray-400 tracking-wide mb-1.5">
             Year *
           </label>
@@ -100,7 +100,7 @@ export function ScheduleFilter() {
         </div>
 
         {/* Section */}
-        <div>
+        <div className="lg:col-span-2">
           <label className="block text-[11px] uppercase font-bold text-gray-400 tracking-wide mb-1.5">
             Section *
           </label>
@@ -121,7 +121,7 @@ export function ScheduleFilter() {
         </div>
 
         {/* Semester */}
-        <div>
+        <div className="lg:col-span-2">
           <label className="block text-[11px] uppercase font-bold text-gray-400 tracking-wide mb-1.5">
             Semester *
           </label>
@@ -138,7 +138,7 @@ export function ScheduleFilter() {
         </div>
 
         {/* Submit */}
-        <div className="flex items-end">
+        <div className="flex items-end lg:col-span-2">
           <button
             type="submit"
             disabled={!isValid}
