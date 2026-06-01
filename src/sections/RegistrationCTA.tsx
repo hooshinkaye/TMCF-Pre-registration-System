@@ -1,43 +1,80 @@
 import { motion } from 'framer-motion';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { CheckCircle2 } from 'lucide-react';
 
 interface RegistrationCTAProps {
   onRegister: () => void;
 }
 
 export function RegistrationCTA({ onRegister }: RegistrationCTAProps) {
+  const benefits = [
+    'Secure your slot for the upcoming semester',
+    'Join thousands of successful students',
+    'Quick and easy online process',
+    '24/7 access to your registration status'
+  ];
+
   return (
-    <section className="bg-[#F8F6F1] py-20 lg:py-24">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-          {/* Image */}
-          <ScrollReveal direction="left" className="flex-shrink-0 w-full lg:w-[400px]">
-            <motion.img
-              src="/graduation-illustration.jpg"
-              alt="Students celebrating graduation"
-              className="w-full rounded-2xl shadow-lg"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            />
+    <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 lg:py-28 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left side - Content */}
+          <ScrollReveal direction="left">
+            <div>
+              <span className="inline-block px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-semibold mb-6">
+                Simple Process
+              </span>
+              <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+                Ready to Take the Next Step?
+              </h2>
+              <p className="text-lg text-slate-300 mb-8 leading-relaxed">
+                Our streamlined pre-registration process takes just minutes to complete. Secure your spot for the upcoming semester and begin your journey toward academic excellence.
+              </p>
+
+              <div className="space-y-4 mb-10">
+                {benefits.map((benefit, index) => (
+                  <motion.div
+                    key={benefit}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                    <span className="text-slate-200">{benefit}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              <button
+                onClick={onRegister}
+                className="px-10 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/25 transition-all hover:-translate-y-1 inline-flex items-center gap-2"
+              >
+                Start Pre-Registration Now
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            </div>
           </ScrollReveal>
 
-          {/* Content */}
-          <ScrollReveal direction="right" className="flex-1 text-center lg:text-left">
-            <h2 className="text-3xl lg:text-[40px] font-bold text-[#0B1F3F] leading-tight mb-4">
-              Ready to Begin?
-            </h2>
-            <p className="text-gray-600 mb-6 leading-relaxed max-w-md mx-auto lg:mx-0">
-              Complete our online pre-registration to secure your slot for the upcoming semester. Join thousands of students who have started their journey with TMCFI.
-            </p>
-            <button
-              onClick={onRegister}
-              className="bg-[#0B1F3F] hover:bg-[#16325B] text-white font-semibold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 hover:shadow-lg inline-flex items-center gap-2"
+          {/* Right side - Image/Visual */}
+          <ScrollReveal direction="right">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="relative"
             >
-              Start Pre-Registration
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl blur-2xl" />
+              <img
+                src="/graduation-illustration.jpg"
+                alt="Students celebrating graduation"
+                className="relative w-full rounded-2xl shadow-2xl border border-slate-700/50"
+              />
+            </motion.div>
           </ScrollReveal>
         </div>
       </div>
