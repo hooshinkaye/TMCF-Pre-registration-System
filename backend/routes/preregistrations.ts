@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 import { query } from '../db.js';
 
@@ -17,10 +16,8 @@ const formSubmitLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// ── Get application root directory ──
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '../..');
+// Use the service working directory so uploads are stored outside dist.
+const rootDir = process.cwd();
 
 // ── File Upload Setup ──
 const uploadsDir = path.join(rootDir, 'uploads/profile_pics');

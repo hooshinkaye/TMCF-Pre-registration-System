@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { ChevronRight, BookOpen, Users, Zap, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
@@ -18,7 +19,12 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
       <div className="absolute bottom-0 right-20 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl -z-10" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+        >
           {/* Badge */}
           <div className="flex justify-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/60 backdrop-blur-sm border border-blue-200/50">
@@ -63,10 +69,11 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
             ].map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <div
+                <motion.div
                   key={idx}
                   onMouseEnter={() => setHoveredCard(idx)}
                   onMouseLeave={() => setHoveredCard(null)}
+                  whileHover={{ y: -4 }}
                   className="group relative transition-transform duration-300 hover:-translate-y-1"
                 >
                   {/* Gradient Background */}
@@ -95,7 +102,7 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
                       }`} />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -142,7 +149,7 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
               <ChevronRight className="w-5 h-5 text-slate-400 mx-auto rotate-90" />
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
