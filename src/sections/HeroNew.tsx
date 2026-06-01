@@ -30,7 +30,7 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
   };
 
   return (
-    <section className="relative overflow-hidden pt-24 sm:pt-32 lg:pt-40 pb-16 sm:pb-20 lg:pb-24">
+    <section id="home" className="relative overflow-hidden pt-24 sm:pt-32 lg:pt-40 pb-16 sm:pb-20 lg:pb-24">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 -z-10" />
       
@@ -41,9 +41,8 @@ export function HeroNew({ onRegisterClick }: HeroNewProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          initial={false}
+          animate="visible"
           className="max-w-4xl mx-auto"
         >
           {/* Badge */}

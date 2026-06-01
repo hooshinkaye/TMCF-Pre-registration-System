@@ -29,7 +29,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-[#F0EEEA]'
-          : 'bg-transparent'
+          : 'bg-white/80 backdrop-blur-md border-b border-white/60'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -38,10 +38,10 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isScrolled ? 'bg-[#0B1F3F]' : 'bg-white/20'}`}>
-            <GraduationCap className={`w-5 h-5 ${isScrolled ? 'text-[#D4A843]' : 'text-white'}`} />
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isScrolled ? 'bg-[#0B1F3F]' : 'bg-[#0B1F3F]'}`}>
+            <GraduationCap className={`w-5 h-5 ${isScrolled ? 'text-[#D4A843]' : 'text-[#D4A843]'}`} />
           </div>
-          <span className={`font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-[#0B1F3F]' : 'text-white'}`}>
+          <span className={`font-bold text-lg tracking-tight transition-colors ${isScrolled ? 'text-[#0B1F3F]' : 'text-[#0B1F3F]'}`}>
             J.A.Q
           </span>
         </Link>
@@ -52,13 +52,13 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
             <>
               <button
                 onClick={() => scrollToSection('home')}
-                className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-white/90'}`}
+                className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-gray-700'}`}
               >
                 Home
               </button>
               <button
                 onClick={() => scrollToSection('programs')}
-                className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-white/90'}`}
+                className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-gray-700'}`}
               >
                 Programs
               </button>
@@ -66,14 +66,14 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
           ) : (
             <Link
               to="/"
-              className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-white/90'}`}
+              className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-gray-700'}`}
             >
               Home
             </Link>
           )}
           <Link
             to="/schedule"
-            className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-white/90'}`}
+            className={`text-sm font-medium transition-colors hover:text-[#D4A843] ${isScrolled ? 'text-gray-600' : 'text-gray-700'}`}
           >
             View Schedule
           </Link>
@@ -92,7 +92,7 @@ export function Navbar({ onRegisterClick }: NavbarProps) {
         {/* Mobile Menu */}
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <button className={`p-2 ${isScrolled ? 'text-[#0B1F3F]' : 'text-white'}`}>
+            <button className={`p-2 ${isScrolled ? 'text-[#0B1F3F]' : 'text-[#0B1F3F]'}`}>
               <Menu className="w-6 h-6" />
             </button>
           </SheetTrigger>
