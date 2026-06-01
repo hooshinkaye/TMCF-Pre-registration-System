@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Area, AreaChart } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Download, RefreshCw, LogOut, TrendingUp, Users, Award, Zap } from 'lucide-react';
+import { Download, RefreshCw, LogOut, Users, TrendingUp, CheckCircle2, Calendar } from 'lucide-react';
 
 interface PreRegistration {
   id: number;
@@ -117,7 +117,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const uniquePrograms = [...new Set(registrations.map(r => r.program))].sort();
   const uniqueGenders = [...new Set(registrations.map(r => r.gender))].sort();
 
-  const COLORS = ['#FF6B6B', '#FFA500', '#FFD700', '#4ECDC4', '#45B7D1', '#96CEB4'];
+  const COLORS = ['#0EA5E9', '#06B6D4', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
   const exportToCSV = () => {
     const headers = ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Program', 'Gender', 'Submitted At'];
@@ -185,20 +185,18 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8 flex justify-between items-start">
           <div>
-            <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-pink-600 mb-2">
-              Dashboard
-            </h1>
-            <p className="text-gray-600">Track and manage pre-registrations in real-time</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
+            <p className="text-slate-400">Manage and analyze pre-registration data</p>
           </div>
           {onLogout && (
             <Button
               onClick={onLogout}
-              className="flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl"
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white"
             >
               <LogOut size={18} />
               Logout
@@ -206,240 +204,281 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
           )}
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-2xl transition-shadow">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-gradient-to-br from-blue-600/20 to-blue-400/10 border border-blue-500/30 rounded-lg p-6 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-100 text-sm font-semibold mb-1">Total</p>
-                <p className="text-4xl font-black">{registrations.length}</p>
+                <p className="text-blue-200 text-sm font-medium mb-1">Total Registrations</p>
+                <p className="text-3xl font-bold text-white">{registrations.length}</p>
               </div>
-              <Users className="w-12 h-12 text-white/30" />
+              <Users className="w-10 h-10 text-blue-400/50" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-2xl transition-shadow">
+          <div className="bg-gradient-to-br from-green-600/20 to-green-400/10 border border-green-500/30 rounded-lg p-6 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-pink-100 text-sm font-semibold mb-1">Today</p>
-                <p className="text-4xl font-black">{todaySubmissions}</p>
+                <p className="text-green-200 text-sm font-medium mb-1">Today</p>
+                <p className="text-3xl font-bold text-white">{todaySubmissions}</p>
               </div>
-              <Zap className="w-12 h-12 text-white/30" />
+              <Calendar className="w-10 h-10 text-green-400/50" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-2xl transition-shadow">
+          <div className="bg-gradient-to-br from-purple-600/20 to-purple-400/10 border border-purple-500/30 rounded-lg p-6 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-sm font-semibold mb-1">This Week</p>
-                <p className="text-4xl font-black">{thisWeekSubmissions}</p>
+                <p className="text-purple-200 text-sm font-medium mb-1">This Week</p>
+                <p className="text-3xl font-bold text-white">{thisWeekSubmissions}</p>
               </div>
-              <TrendingUp className="w-12 h-12 text-white/30" />
+              <TrendingUp className="w-10 h-10 text-purple-400/50" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-2xl transition-shadow">
+          <div className="bg-gradient-to-br from-cyan-600/20 to-cyan-400/10 border border-cyan-500/30 rounded-lg p-6 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-cyan-100 text-sm font-semibold mb-1">Avg/Day</p>
-                <p className="text-4xl font-black">{registrations.length > 0 ? Math.ceil(registrations.length / 30) : 0}</p>
+                <p className="text-cyan-200 text-sm font-medium mb-1">Avg/Day</p>
+                <p className="text-3xl font-bold text-white">{registrations.length > 0 ? Math.ceil(registrations.length / 30) : 0}</p>
               </div>
-              <Award className="w-12 h-12 text-white/30" />
+              <CheckCircle2 className="w-10 h-10 text-cyan-400/50" />
             </div>
           </div>
         </div>
 
-        {/* Charts Grid */}
+        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Timeline */}
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-lg">
-            <h3 className="text-xl font-black text-gray-900 mb-4">Trend</h3>
+          {/* Timeline Chart */}
+          <div className="lg:col-span-2 bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 backdrop-blur">
+            <h3 className="text-lg font-semibold text-white mb-4">Submissions Trend (30 Days)</h3>
             {timelineData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={timelineData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="date" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                <AreaChart data={timelineData}>
+                  <defs>
+                    <linearGradient id="colorSubmissions" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0EA5E9" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#0EA5E9" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
+                  <XAxis dataKey="date" stroke="#94A3B8" fontSize={12} />
+                  <YAxis stroke="#94A3B8" fontSize={12} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#fff', border: '2px solid #ff7a5c', borderRadius: '12px' }}
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px', color: '#F1F5F9' }}
+                    cursor={{ fill: 'rgba(14, 165, 233, 0.1)' }}
                   />
-                  <Line type="monotone" dataKey="submissions" stroke="#ff7a5c" strokeWidth={3} dot={{ fill: '#ff7a5c', r: 4 }} />
-                </LineChart>
+                  <Area type="monotone" dataKey="submissions" stroke="#0EA5E9" strokeWidth={2} fillOpacity={1} fill="url(#colorSubmissions)" />
+                </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-gray-400 text-center py-8">No data</p>
+              <p className="text-slate-400 text-center py-8">No data yet</p>
             )}
           </div>
 
-          {/* Program Pie */}
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
-            <h3 className="text-xl font-black text-gray-900 mb-4">Programs</h3>
+          {/* Program Distribution */}
+          <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 backdrop-blur">
+            <h3 className="text-lg font-semibold text-white mb-4">Programs</h3>
             {programCounts.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={programCounts} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" paddingAngle={2}>
+                  <Pie
+                    data={programCounts}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${value}`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
                     {programCounts.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px', color: '#F1F5F9' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-gray-400 text-center py-8">No data</p>
+              <p className="text-slate-400 text-center py-8">No data</p>
             )}
           </div>
         </div>
 
-        {/* Gender Chart */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
-          <h3 className="text-xl font-black text-gray-900 mb-4">Gender Distribution</h3>
+        {/* Gender Distribution */}
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 backdrop-blur mb-8">
+          <h3 className="text-lg font-semibold text-white mb-4">Gender Distribution</h3>
           {genderCounts.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={genderCounts}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="name" stroke="#9ca3af" />
-                <YAxis stroke="#9ca3af" />
-                <Tooltip contentStyle={{ backgroundColor: '#fff', border: '2px solid #ff7a5c', borderRadius: '12px' }} />
-                <Bar dataKey="value" fill="#ff7a5c" radius={[12, 12, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
+                <XAxis dataKey="name" stroke="#94A3B8" />
+                <YAxis stroke="#94A3B8" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px', color: '#F1F5F9' }}
+                />
+                <Bar dataKey="value" fill="#0EA5E9" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-gray-400 text-center py-8">No data</p>
+            <p className="text-slate-400 text-center py-8">No data</p>
           )}
         </div>
 
-        {/* Filters Section */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
-          <h3 className="text-xl font-black text-gray-900 mb-4">Search & Filter</h3>
-          
+        {/* Filters */}
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 backdrop-blur mb-8">
+          <h3 className="text-lg font-semibold text-white mb-4">Filters & Controls</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
-            <Input
-              placeholder="Search name/email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="rounded-xl border-2 border-gray-200"
-            />
+            <div>
+              <label className="text-slate-300 text-sm font-medium block mb-2">Search</label>
+              <Input
+                placeholder="Name, email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-slate-700 border-slate-600 text-white placeholder-slate-500"
+              />
+            </div>
 
-            <select
-              value={selectedProgram}
-              onChange={(e) => setSelectedProgram(e.target.value)}
-              className="rounded-xl border-2 border-gray-200 px-4 py-2"
-            >
-              <option value="all">All Programs</option>
-              {uniquePrograms.map(prog => (
-                <option key={prog} value={prog}>{prog}</option>
-              ))}
-            </select>
+            <div>
+              <label className="text-slate-300 text-sm font-medium block mb-2">Program</label>
+              <select
+                value={selectedProgram}
+                onChange={(e) => setSelectedProgram(e.target.value)}
+                className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+              >
+                <option value="all">All Programs</option>
+                {uniquePrograms.map(prog => (
+                  <option key={prog} value={prog}>{prog}</option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              value={selectedGender}
-              onChange={(e) => setSelectedGender(e.target.value)}
-              className="rounded-xl border-2 border-gray-200 px-4 py-2"
-            >
-              <option value="all">All</option>
-              {uniqueGenders.map(gender => (
-                <option key={gender} value={gender}>{gender}</option>
-              ))}
-            </select>
+            <div>
+              <label className="text-slate-300 text-sm font-medium block mb-2">Gender</label>
+              <select
+                value={selectedGender}
+                onChange={(e) => setSelectedGender(e.target.value)}
+                className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+              >
+                <option value="all">All</option>
+                {uniqueGenders.map(gender => (
+                  <option key={gender} value={gender}>{gender}</option>
+                ))}
+              </select>
+            </div>
 
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="rounded-xl border-2 border-gray-200 px-4 py-2"
-            />
+            <div>
+              <label className="text-slate-300 text-sm font-medium block mb-2">From</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+              />
+            </div>
 
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="rounded-xl border-2 border-gray-200 px-4 py-2"
-            />
+            <div>
+              <label className="text-slate-300 text-sm font-medium block mb-2">To</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full bg-slate-700 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+              />
+            </div>
 
-            <Button
-              onClick={fetchRegistrations}
-              disabled={loading}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
-            </Button>
+            <div className="flex items-end">
+              <Button
+                onClick={fetchRegistrations}
+                disabled={loading}
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </Button>
+            </div>
           </div>
 
+          {/* Export Options */}
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={exportToCSV}
               disabled={filtered.length === 0}
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl"
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
             >
-              <Download className="w-4 h-4 mr-2" />
-              CSV
+              <Download className="w-4 h-4" />
+              Export CSV
             </Button>
             <Button
               onClick={exportToJSON}
               disabled={filtered.length === 0}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl"
+              className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2"
             >
-              <Download className="w-4 h-4 mr-2" />
-              JSON
+              <Download className="w-4 h-4" />
+              Export JSON
             </Button>
-            <span className="text-gray-600 font-semibold self-center">
-              {filtered.length} of {registrations.length}
+            <span className="text-slate-400 text-sm self-center">
+              {filtered.length} of {registrations.length} registrations
             </span>
           </div>
         </div>
 
         {/* Data Table */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-hidden backdrop-blur">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-orange-100 to-pink-100">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-700/50 border-b border-slate-600">
                 <tr>
                   <th className="px-6 py-4 text-left">
                     <input
                       type="checkbox"
                       checked={selectedRows.length === filtered.length && filtered.length > 0}
                       onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded"
+                      className="w-4 h-4 rounded border-slate-500"
                     />
                   </th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Name</th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Email</th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Program</th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Gender</th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Phone</th>
-                  <th className="px-6 py-4 text-left font-black text-gray-900">Date</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Name</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Email</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Program</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Gender</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Phone</th>
+                  <th className="px-6 py-4 text-left font-semibold text-slate-200">Submitted</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody>
                 {filtered.length > 0 ? (
                   filtered.map((reg) => (
-                    <tr key={reg.id} className="hover:bg-orange-50 transition-colors">
+                    <tr key={reg.id} className="border-b border-slate-700 hover:bg-slate-700/30 transition-colors">
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"
                           checked={selectedRows.includes(reg.id)}
                           onChange={() => toggleRowSelection(reg.id)}
-                          className="w-4 h-4 rounded"
+                          className="w-4 h-4 rounded border-slate-500"
                         />
                       </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">{reg.first_name} {reg.last_name}</td>
-                      <td className="px-6 py-4 text-gray-700">{reg.email}</td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-100 to-pink-100 text-orange-900 text-sm font-semibold">
+                      <td className="px-6 py-4 text-slate-200 font-medium">
+                        {reg.first_name} {reg.last_name}
+                      </td>
+                      <td className="px-6 py-4 text-slate-300">{reg.email}</td>
+                      <td className="px-6 py-4 text-slate-300">
+                        <span className="px-2 py-1 rounded-full bg-blue-600/30 text-blue-200 text-xs font-medium">
                           {reg.program}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{reg.gender}</td>
-                      <td className="px-6 py-4 text-gray-700">{reg.phone}</td>
-                      <td className="px-6 py-4 text-gray-600 text-sm">{new Date(reg.submitted_at).toLocaleString()}</td>
+                      <td className="px-6 py-4 text-slate-300">{reg.gender}</td>
+                      <td className="px-6 py-4 text-slate-300">{reg.phone}</td>
+                      <td className="px-6 py-4 text-slate-400 text-xs">
+                        {new Date(reg.submitted_at).toLocaleString()}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                      {loading ? 'Loading...' : 'No data found'}
+                    <td colSpan={7} className="px-6 py-8 text-center text-slate-400">
+                      {loading ? 'Loading...' : 'No registrations found'}
                     </td>
                   </tr>
                 )}

@@ -1,137 +1,156 @@
 import { motion } from 'framer-motion';
-import { CheckCircle2, Zap } from 'lucide-react';
+import { CheckCircle2, Clock, Lock, Zap } from 'lucide-react';
 
 interface RegistrationCTAProps {
   onRegister: () => void;
 }
 
 export function RegistrationCTA({ onRegister }: RegistrationCTAProps) {
-  const highlights = [
-    'Instant confirmation & status tracking',
-    'Mobile-friendly registration form',
-    'Secure & encrypted submission',
-    'Personalized program recommendations'
+  const benefits = [
+    { icon: Clock, text: '5 minutes to complete', accent: 'text-blue-600' },
+    { icon: Lock, text: 'Your data is secure', accent: 'text-purple-600' },
+    { icon: Zap, text: 'Instant confirmation', accent: 'text-orange-600' },
+    { icon: CheckCircle2, text: '100% free to join', accent: 'text-green-600' },
   ];
 
-  return (
-    <section className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50" />
-      
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-orange-400 to-pink-400 opacity-10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-400 to-pink-400 opacity-10 rounded-full blur-3xl" />
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    },
+  };
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+  };
+
+  return (
+    <section className="relative w-full py-16 sm:py-20 bg-white overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full blur-3xl opacity-40" />
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-pink-100 to-orange-100 rounded-full blur-3xl opacity-40" />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Content */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-100 to-pink-100 border border-orange-200 mb-6">
-              <Zap className="w-4 h-4 text-orange-600" />
-              <span className="text-sm font-semibold text-orange-900">Fast & Easy</span>
+            <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-blue-100/80 backdrop-blur mb-4">
+              <span className="text-sm font-semibold text-blue-600">Ready to Join?</span>
             </div>
 
-            <h2 className="text-5xl lg:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-500 to-pink-600">
-              Ready to Start?
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-6 leading-tight">
+              Start Your Application in Seconds
             </h2>
 
-            <p className="text-xl text-gray-700 mb-10 leading-relaxed">
-              Complete your pre-registration in just minutes. It's simple, secure, and gets you one step closer to your dream education.
+            <p className="text-lg text-slate-600 mb-8">
+              Our streamlined registration process is designed for you. Quick, easy, and completely free. Get started today and take the first step toward your future.
             </p>
 
-            {/* Highlights */}
-            <div className="space-y-4 mb-10">
-              {highlights.map((highlight, index) => (
-                <motion.div
-                  key={highlight}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-gray-700 font-medium">{highlight}</span>
-                </motion.div>
-              ))}
-            </div>
+            {/* Benefits Grid */}
+            <motion.div
+              className="grid grid-cols-2 gap-4 mb-8"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+            >
+              {benefits.map((benefit, idx) => {
+                const Icon = benefit.icon;
+                return (
+                  <motion.div key={idx} variants={itemVariants} className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-1">
+                      <Icon className={`w-5 h-5 ${benefit.accent}`} />
+                    </div>
+                    <p className="text-sm font-medium text-slate-700">{benefit.text}</p>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
 
-            {/* Primary CTA */}
+            {/* CTA Button */}
             <motion.button
               onClick={onRegister}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-2xl transition-all"
+              className="btn btn-primary rounded-xl text-lg px-8 py-4 w-full sm:w-auto shadow-lg hover:shadow-xl"
             >
-              Begin Pre-Registration
+              <span>Start Registration</span>
+              <Zap className="w-5 h-5" />
             </motion.button>
           </motion.div>
 
           {/* Right: Visual */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
             className="relative"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="relative w-full aspect-square">
-              {/* Floating info cards */}
+            {/* Floating cards */}
+            <div className="relative h-96 sm:h-[450px]">
+              {/* Card 1 */}
               <motion.div
-                animate={{ y: [0, -30, 0] }}
-                transition={{ duration: 5, repeat: Infinity }}
-                className="absolute top-10 left-0 w-56 bg-white rounded-3xl p-6 shadow-xl border-2 border-orange-100"
+                className="glass-card absolute top-0 left-0 right-0 mx-auto w-full max-w-xs"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black">
-                    ✓
-                  </div>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Application</p>
-                    <p className="text-lg font-black text-gray-900">Fast Process</p>
+                    <p className="font-bold text-slate-900 text-sm">Step 1</p>
+                    <p className="text-xs text-slate-500">Tell us about yourself</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Complete in minutes</p>
+                <div className="flex gap-2">
+                  <div className="w-8 h-2 bg-blue-200 rounded-full" />
+                  <div className="w-8 h-2 bg-slate-200 rounded-full" />
+                  <div className="w-8 h-2 bg-slate-200 rounded-full" />
+                </div>
               </motion.div>
 
+              {/* Card 2 */}
               <motion.div
-                animate={{ y: [0, 30, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
-                className="absolute bottom-20 right-0 w-56 bg-white rounded-3xl p-6 shadow-xl border-2 border-pink-100"
+                className="glass-card absolute top-32 left-1/2 -translate-x-1/2 w-full max-w-xs"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center text-white font-black">
-                    📧
-                  </div>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Confirmation</p>
-                    <p className="text-lg font-black text-gray-900">Instant Email</p>
+                    <p className="font-bold text-slate-900 text-sm">Step 2</p>
+                    <p className="text-xs text-slate-500">Choose your program</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Right to your inbox</p>
+                <div className="flex gap-2">
+                  <div className="w-8 h-2 bg-blue-200 rounded-full" />
+                  <div className="w-8 h-2 bg-purple-200 rounded-full" />
+                  <div className="w-8 h-2 bg-slate-200 rounded-full" />
+                </div>
               </motion.div>
 
+              {/* Card 3 */}
               <motion.div
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-                className="absolute top-1/3 right-1/4 w-56 bg-white rounded-3xl p-6 shadow-xl border-2 border-purple-100"
+                className="glass-card absolute bottom-0 right-0 w-full max-w-xs"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: 1 }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-black">
-                    🎓
-                  </div>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Next Step</p>
-                    <p className="text-lg font-black text-gray-900">Your Future</p>
+                    <p className="font-bold text-slate-900 text-sm">Step 3</p>
+                    <p className="text-xs text-slate-500">Complete & submit</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Starts with one click</p>
+                <div className="flex gap-2">
+                  <div className="w-8 h-2 bg-blue-200 rounded-full" />
+                  <div className="w-8 h-2 bg-purple-200 rounded-full" />
+                  <div className="w-8 h-2 bg-green-200 rounded-full" />
+                </div>
               </motion.div>
             </div>
           </motion.div>

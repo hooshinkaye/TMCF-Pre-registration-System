@@ -4,7 +4,7 @@ import { useSchedule } from '@/hooks/useSchedule';
 import { MaintenancePage } from '@/components/MaintenancePage';
 import { Navbar } from '@/components/Navbar';
 import { Chatbot } from '@/components/Chatbot';
-import { RegistrationWizard } from '@/components/RegistrationWizard';
+import { RegistrationWizard } from '@/components/RegistrationWizardNew';
 import { LoginModal } from '@/components/LoginModal';
 import { TermsModal } from '@/components/TermsModal';
 import { SuccessModal } from '@/components/SuccessModal';
@@ -12,6 +12,7 @@ import { CaptchaModal } from '@/components/CaptchaModal';
 import { HomePage } from '@/pages/HomePage';
 import { SchedulePage } from '@/pages/SchedulePage';
 import { AdminPage } from '@/pages/AdminPage';
+import '@/styles/design-system.css';
 
 function ScrollToTop() {
   const { pathname } = useLocation();

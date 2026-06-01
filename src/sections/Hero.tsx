@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles, BookOpen, Users, Zap } from 'lucide-react';
 
 interface HeroProps {
   onRegister: () => void;
@@ -11,149 +11,118 @@ export function Hero({ onRegister, onLogin }: HeroProps) {
     document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Floating cards data
+  const floatingCards = [
+    { icon: BookOpen, label: 'Learn', delay: 0 },
+    { icon: Users, label: 'Connect', delay: 0.2 },
+    { icon: Zap, label: 'Grow', delay: 0.4 },
+  ];
+
+  // Container variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2, delayChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
-      {/* Background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-orange-300/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl" />
-      <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-pink-200/30 rounded-full blur-3xl" />
+    <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-20 pb-10">
+      {/* Animated background elements */}
+      <div className="absolute top-10 right-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-100 to-pink-100 border border-orange-200 mb-6"
-            >
-              <Sparkles className="w-4 h-4 text-orange-600" />
-              <span className="text-sm font-semibold text-orange-900">New Opportunities Await</span>
-            </motion.div>
+      <motion.div
+        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center min-h-screen"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Badge */}
+        <motion.div variants={itemVariants} className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur border border-blue-100 shadow-sm">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-semibold text-blue-600">Join 2000+ Students</span>
+          </div>
+        </motion.div>
 
-            {/* Main Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.1] mb-6 text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-500 to-pink-600"
-            >
-              Transform Your Dreams Into Reality
-            </motion.h1>
+        {/* Main Heading */}
+        <motion.div variants={itemVariants} className="text-center mb-6 sm:mb-8">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-4">
+            <span className="text-slate-900">Your Future</span>
+            <br />
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Starts Today
+            </span>
+          </h1>
+          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Join Tan Ting Bing Memorial Colleges and unlock your potential with world-class education and life-changing opportunities.
+          </p>
+        </motion.div>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-lg sm:text-xl text-gray-700 mb-8 leading-relaxed max-w-lg"
-            >
-              Join thousands of ambitious students at Tan Ting Bing Memorial Colleges. Quality education. Limitless potential. Your success story starts today.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 mb-12"
-            >
-              <button
-                onClick={onRegister}
-                className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-orange-500/40 transition-all hover:scale-105 flex items-center justify-center gap-2"
-              >
-                Register Now
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={onLogin}
-                className="px-8 py-4 border-2 border-orange-500 text-orange-600 font-bold rounded-2xl hover:bg-orange-50 transition-all"
-              >
-                Student Login
-              </button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex gap-8"
-            >
-              <div>
-                <p className="text-3xl font-black bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">6+</p>
-                <p className="text-sm text-gray-600 font-semibold">Degree Programs</p>
-              </div>
-              <div>
-                <p className="text-3xl font-black bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">2000+</p>
-                <p className="text-sm text-gray-600 font-semibold">Happy Students</p>
-              </div>
-              <div>
-                <p className="text-3xl font-black bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">25+</p>
-                <p className="text-sm text-gray-600 font-semibold">Years Excellence</p>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right: Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: 50, rotate: 5 }}
-            animate={{ opacity: 1, x: 0, rotate: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="relative hidden lg:block"
-          >
-            <div className="relative w-full aspect-square">
-              {/* Floating cards animation */}
+        {/* Floating Feature Cards */}
+        <motion.div variants={itemVariants} className="grid grid-cols-3 gap-3 sm:gap-4 mb-10 w-full max-w-sm">
+          {floatingCards.map((card, idx) => {
+            const Icon = card.icon;
+            return (
               <motion.div
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute top-0 left-0 w-48 h-32 bg-gradient-to-br from-orange-400 to-orange-500 rounded-3xl shadow-2xl p-6 text-white"
+                key={idx}
+                className="glass-card !p-4 sm:!p-6 text-center hover:scale-105"
+                whileHover={{ y: -8 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
-                <p className="text-sm font-bold mb-2">Top Program</p>
-                <p className="text-2xl font-black">BSIT</p>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 20, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                className="absolute bottom-10 right-0 w-48 h-32 bg-gradient-to-br from-pink-400 to-pink-500 rounded-3xl shadow-2xl p-6 text-white"
-              >
-                <p className="text-sm font-bold mb-2">Success Rate</p>
-                <p className="text-2xl font-black">98%</p>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-                className="absolute top-1/3 right-1/4 w-40 h-40 bg-gradient-to-br from-purple-400 to-purple-500 rounded-3xl shadow-2xl flex items-center justify-center text-white"
-              >
-                <div className="text-center">
-                  <p className="text-4xl font-black">🎓</p>
-                  <p className="text-xs font-bold mt-2">Quality Education</p>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 mb-3">
+                  <Icon className="w-6 h-6 text-blue-600" />
                 </div>
+                <p className="text-sm font-semibold text-slate-900">{card.label}</p>
               </motion.div>
-            </div>
-          </motion.div>
-        </div>
+            );
+          })}
+        </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div
+        {/* CTA Buttons */}
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full max-w-sm mb-12">
+          <button
+            onClick={onRegister}
+            className="btn btn-primary w-full sm:flex-1 rounded-lg shadow-lg hover:shadow-xl"
+          >
+            Register Now
+            <Zap className="w-5 h-5" />
+          </button>
+          <button
+            onClick={onLogin}
+            className="btn btn-secondary w-full sm:flex-1 rounded-lg"
+          >
+            Student Portal
+          </button>
+        </motion.div>
+
+        {/* Trust indicators */}
+        <motion.div variants={itemVariants} className="text-center text-sm text-slate-500">
+          <p>✓ Free to register • ✓ No credit card required • ✓ Instant access</p>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.button
+          onClick={scrollToPrograms}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-orange-600"
         >
-          <p className="text-sm font-semibold">Explore Programs</p>
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </motion.div>
-      </div>
+          <div className="flex flex-col items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
+            <span className="text-xs font-semibold uppercase tracking-wider">Explore</span>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+        </motion.button>
+      </motion.div>
     </section>
   );
 }
