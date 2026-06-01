@@ -18,7 +18,7 @@ export function HomePageNew({ onRegister, onLogin }: HomePageNewProps) {
       <ProgramsNew onRegister={onRegister} />
 
       {/* About Section */}
-      <AboutSection />
+      <AboutSection onRegister={onRegister} />
 
       {/* Testimonials Section */}
       <TestimonialsSection />
@@ -132,7 +132,7 @@ function ProgramsNew({ onRegister }: { onRegister: () => void }) {
 }
 
 // New About Section
-function AboutSection() {
+function AboutSection({ onRegister }: { onRegister: () => void }) {
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
