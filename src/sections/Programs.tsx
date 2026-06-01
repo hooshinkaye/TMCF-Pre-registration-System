@@ -1,57 +1,96 @@
-import { GraduationCap, BookOpen, Shield, Laptop, UtensilsCrossed, Code, ArrowRight } from 'lucide-react';
-import { ScrollReveal } from '@/components/ScrollReveal';
+import { GraduationCap, BookOpen, Shield, Laptop, UtensilsCrossed, Code } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const programs = [
-  { icon: GraduationCap, title: 'K-12 Education', description: 'Complete academic foundation from Kindergarten to Senior High School with exceptional faculty and modern facilities.' },
-  { icon: BookOpen, title: 'Bachelor of Elementary Education', description: 'Become an inspiring educator who shapes the future generation with innovative teaching methodologies.' },
-  { icon: Shield, title: 'Bachelor of Science in Criminology', description: 'Pursue a career in law enforcement and criminal justice with comprehensive training and practical experience.' },
-  { icon: Laptop, title: 'Bachelor of Science in Information Technology', description: 'Master cutting-edge technologies and become a tech leader in the digital transformation era.' },
-  { icon: UtensilsCrossed, title: 'Bachelor of Science in Hospitality Management', description: 'Lead in the hospitality industry with world-class training in management and customer excellence.' },
-  { icon: Code, title: 'Bachelor of Science in Computer Science', description: 'Dive into advanced algorithms, software engineering, and cutting-edge system design principles.' },
+  { icon: GraduationCap, title: 'K-12 Education', description: 'Build your foundation with exceptional K-12 programs', color: 'from-red-400 to-red-600', lightColor: 'bg-red-100' },
+  { icon: BookOpen, title: 'BEED', description: 'Become an inspiring educator', color: 'from-orange-400 to-orange-600', lightColor: 'bg-orange-100' },
+  { icon: Shield, title: 'BSCRIM', description: 'Lead in law enforcement & justice', color: 'from-yellow-400 to-yellow-600', lightColor: 'bg-yellow-100' },
+  { icon: Laptop, title: 'BSIT', description: 'Master modern technology & innovation', color: 'from-green-400 to-green-600', lightColor: 'bg-green-100' },
+  { icon: UtensilsCrossed, title: 'BSHM', description: 'Excel in hospitality & tourism', color: 'from-blue-400 to-blue-600', lightColor: 'bg-blue-100' },
+  { icon: Code, title: 'BSCS', description: 'Engineer the future with code', color: 'from-purple-400 to-purple-600', lightColor: 'bg-purple-100' },
 ];
 
 export function Programs() {
   return (
-    <section id="programs" className="bg-slate-50 py-20 lg:py-28">
+    <section id="programs" className="bg-gradient-to-b from-white to-orange-50 py-24 lg:py-32">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <ScrollReveal className="text-center mb-16">
-          <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-4">
-            Our Academic Programs
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            Choose Your Path to Success
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-5xl lg:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-pink-600">
+            Choose Your Passion
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Explore our comprehensive range of programs designed to prepare you for a rewarding career and personal growth.
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            Six world-class programs designed to launch your career and unlock your potential
           </p>
-        </ScrollReveal>
+        </motion.div>
 
+        {/* Programs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {programs.map((program, i) => {
             const Icon = program.icon;
             return (
-              <ScrollReveal key={program.title} delay={i * 0.1}>
+              <motion.div
+                key={program.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
+                className="group relative bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-gray-200 transition-all"
+              >
+                {/* Background accent */}
+                <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${program.color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
+
+                {/* Icon */}
                 <motion.div
-                  whileHover={{ translateY: -8 }}
-                  className="group bg-white rounded-xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100"
+                  className={`w-16 h-16 rounded-2xl ${program.lightColor} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}
                 >
-                  <div className="mb-4 inline-block p-3 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg group-hover:from-blue-100 group-hover:to-cyan-100 transition-colors">
-                    <Icon className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{program.title}</h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed text-sm">
-                    {program.description}
-                  </p>
-                  <div className="flex items-center text-blue-600 font-semibold text-sm group-hover:gap-2 transition-all">
-                    Learn more
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </div>
+                  <Icon className={`w-8 h-8 text-transparent bg-clip-text bg-gradient-to-r ${program.color}`} />
                 </motion.div>
-              </ScrollReveal>
+
+                {/* Title */}
+                <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-600 group-hover:to-pink-600 transition-all">
+                  {program.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-600 mb-6 leading-relaxed">{program.description}</p>
+
+                {/* CTA Link */}
+                <motion.div
+                  className={`inline-flex items-center gap-2 font-bold text-transparent bg-clip-text bg-gradient-to-r ${program.color}`}
+                  whileHover={{ gap: 12 }}
+                >
+                  Learn More
+                  <motion.span whileHover={{ x: 5 }}>→</motion.span>
+                </motion.div>
+
+                {/* Number badge */}
+                <div className={`absolute top-6 right-6 w-10 h-10 rounded-full bg-gradient-to-br ${program.color} flex items-center justify-center text-white font-black text-sm opacity-20 group-hover:opacity-100 transition-opacity`}>
+                  {i + 1}
+                </div>
+              </motion.div>
             );
           })}
         </div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <p className="text-gray-700 mb-4">Ready to find your perfect program?</p>
+          <button className="px-10 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-orange-500/40 transition-all hover:scale-105">
+            Explore All Programs
+          </button>
+        </motion.div>
       </div>
     </section>
   );
