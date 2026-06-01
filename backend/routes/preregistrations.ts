@@ -180,8 +180,8 @@ router.patch('/pre-registrations/:id/status', async (req: Request, res: Response
     const result = await query(
       `
         UPDATE pre_registrations
-        SET status = $1,
-            reviewed_at = CASE WHEN $1 = 'pending' THEN NULL ELSE CURRENT_TIMESTAMP END
+        SET status = $1::varchar,
+            reviewed_at = CASE WHEN $1::varchar = 'pending' THEN NULL ELSE CURRENT_TIMESTAMP END
         WHERE id = $2
         RETURNING *;
       `,
