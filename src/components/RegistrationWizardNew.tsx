@@ -18,6 +18,8 @@ interface RegistrationWizardProps {
 }
 
 const PSGC_API = 'https://psgc.gitlab.io/api';
+const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 interface Province { name: string; code: string; }
 interface City { name: string; code: string; }
@@ -57,9 +59,9 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     if (formData.province) {
       const prov = provinces.find(p => p.name === formData.province);
       if (prov) {
-        fetch(`${PSGC_API}/provinces/${prov.code}/cities/`)
+        fetch(`${PSGC_API}/provinces/${prov.code}/cities-municipalities/`)
           .then(r => r.json())
-          .then((data: City[]) => setCities(data))
+          .then((data: City[]) => setCities(data.sort((a, b) => a.name.localeCompare(b.name))))
           .catch(console.error);
       }
     } else {
@@ -74,9 +76,9 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
     if (formData.city) {
       const city = cities.find(c => c.name === formData.city);
       if (city) {
-        fetch(`${PSGC_API}/cities/${city.code}/barangays/`)
+        fetch(`${PSGC_API}/cities-municipalities/${city.code}/barangays/`)
           .then(r => r.json())
-          .then((data: Barangay[]) => setBarangays(data))
+          .then((data: Barangay[]) => setBarangays(data.sort((a, b) => a.name.localeCompare(b.name))))
           .catch(console.error);
       }
     } else {
@@ -112,7 +114,24 @@ export function RegistrationWizard({ open, onOpenChange, onShowTerms, onShowSucc
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+        setPhotoPreview(null);
+        setFormData(prev => ({ ...prev, profilePic: null }));
+        setErrors(prev => ({ ...prev, profilePic: 'Please upload a JPG, PNG, or WebP image.' }));
+        e.target.value = '';
+        return;
+      }
+
+      if (file.size > MAX_PHOTO_SIZE) {
+        setPhotoPreview(null);
+        setFormData(prev => ({ ...prev, profilePic: null }));
+        setErrors(prev => ({ ...prev, profilePic: 'The selected image exceeds 5MB. Please upload a smaller photo.' }));
+        e.target.value = '';
+        return;
+      }
+
       setFormData(prev => ({ ...prev, profilePic: file }));
+      setErrors(prev => ({ ...prev, profilePic: '' }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result as string);

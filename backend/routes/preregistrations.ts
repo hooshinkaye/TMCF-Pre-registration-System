@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs/promises';
@@ -42,6 +42,41 @@ const upload = multer({
   },
 });
 
+const uploadProfilePic = (req: Request, res: Response, next: NextFunction) => {
+  upload.single('profile_pic')(req, res, (err: unknown) => {
+    if (!err) {
+      next();
+      return;
+    }
+
+    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+      res.status(400).json({ error: 'The selected image exceeds 5MB. Please upload a smaller photo.' });
+      return;
+    }
+
+    if (err instanceof Error) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.status(400).json({ error: 'Unable to upload photo. Please try again.' });
+  });
+};
+
+const normalizeText = (value: unknown): string => String(value || '').trim();
+const normalizeEmail = (value: unknown): string => normalizeText(value).toLowerCase();
+const normalizePhone = (value: unknown): string => normalizeText(value).replace(/\D/g, '');
+
+async function removeUploadedFile(filename: string | null): Promise<void> {
+  if (!filename) return;
+
+  try {
+    await fs.unlink(path.join(uploadsDir, filename));
+  } catch (err) {
+    console.warn('Unable to remove rejected upload:', err);
+  }
+}
+
 // Ensure uploads directory exists
 (async () => {
   try {
@@ -52,7 +87,7 @@ const upload = multer({
 })();
 
 // ── POST: Submit Pre-Registration ──
-router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile_pic'), async (req: Request, res: Response) => {
+router.post('/submit-preregistration', formSubmitLimiter, uploadProfilePic, async (req: Request, res: Response) => {
   try {
     // Honeypot check
     if (req.body.website_url) {
@@ -73,8 +108,8 @@ router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile
     const religion = rel || req.body.religion || req.body.relationship;
     const address = addr || req.body.address;
     const program = prog || req.body.program;
-    const email = req.body.email || null;
-    const phone = req.body.phone || null;
+    const email = normalizeEmail(req.body.email) || null;
+    const phone = normalizePhone(req.body.phone) || null;
 
     // Validate required fields
     if (!lastName || !firstName || !program) {
@@ -82,6 +117,31 @@ router.post('/submit-preregistration', formSubmitLimiter, upload.single('profile
     }
 
     const photoFilename = req.file?.filename || null;
+
+    const duplicateResult = await query(
+      `
+        SELECT id
+        FROM pre_registrations
+        WHERE
+          ($1::varchar IS NOT NULL AND LOWER(email) = $1::varchar)
+          OR ($2::varchar IS NOT NULL AND regexp_replace(COALESCE(phone, ''), '\\D', '', 'g') = $2::varchar)
+          OR (
+            LOWER(first_name) = LOWER($3::varchar)
+            AND LOWER(last_name) = LOWER($4::varchar)
+            AND birthdate = NULLIF($5::varchar, '')::date
+          )
+        ORDER BY submitted_at DESC
+        LIMIT 1;
+      `,
+      [email, phone, firstName, lastName, birthdate || ''],
+    );
+
+    if (duplicateResult.rows.length > 0) {
+      await removeUploadedFile(photoFilename);
+      return res.status(409).json({
+        error: 'A pre-registration with the same student details already exists. Please contact the Registrar if you need to update your submission.',
+      });
+    }
 
     const sql = `
       INSERT INTO pre_registrations (
